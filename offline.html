@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplazo · POS Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root{
+  --cyan:#4AC9E3;--teal:#214345;--foam:#D6F5FA;
+  --n100:#EBEDF0;--n200:#D8DCE0;--n300:#C4CAD0;
+  --border:#E2E5E8;
+  --t1:#060606;--t2:#2E343A;--t3:#7F8D98;
+  --green:#5AAD12;--green-l:#EAF7D5;--red:#D41413;--red-l:#FDEAEA;
+  --sh-sm:0 1px 4px rgba(0,0,0,.08);
+  --sh-md:0 4px 16px rgba(0,0,0,.10);
+  --sh-xl:0 24px 64px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.08);
+  --ck-teal:#00C2C7;
+  --va:#111;--va-l:#f5f5f5;--va-btn:#111;--va-btn-t:#fff;--va-acc:#111;
+  /* pos theme */
+  --pos-bg:#f0f2f5;--pos-card:#fff;--pos-nav:#1a1a1a;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#0f0f1a;color:var(--t1)}
+
+/* ── vertical themes ── */
+.v-moda{--va:#111;--va-l:#f5f5f5;--va-btn:#111;--va-btn-t:#fff;--va-acc:#111}
+.v-super{--va:#E87722;--va-l:#FFF3E8;--va-btn:#E87722;--va-btn-t:#fff;--va-acc:#E87722}
+.v-entret{--va:#1A3C6E;--va-l:#E8EFF8;--va-btn:#2D6BE4;--va-btn-t:#fff;--va-acc:#2D6BE4}
+.v-viajes{--va:#C0392B;--va-l:#FDEAEA;--va-btn:#C0392B;--va-btn-t:#fff;--va-acc:#C0392B}
+
+/* ════ SETUP ════ */
+#setup{position:fixed;inset:0;background:linear-gradient(135deg,#0d1b2a,#214345);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px}
+.sc{background:#fff;border-radius:28px;padding:36px 40px;width:100%;max-width:640px;box-shadow:0 40px 100px rgba(0,0,0,.4)}
+.sc-logo{display:inline-flex;align-items:center;background:var(--cyan);border-radius:100px;padding:6px 16px;margin-bottom:22px}
+.sc-logo span{font-weight:800;font-size:15px;color:var(--teal);font-family:'Manrope',sans-serif}
+.sc h1{font-size:24px;font-weight:800;margin-bottom:4px}
+.sc p{font-size:13px;color:var(--t3);font-weight:600;margin-bottom:28px;line-height:1.6}
+.sc-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;color:var(--t3);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sc-lbl .sn{width:19px;height:19px;border-radius:50%;background:var(--teal);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sc-step{margin-bottom:22px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.so{border:2px solid var(--border);border-radius:14px;padding:12px 10px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;opacity:.45;pointer-events:none}
+.so.on{opacity:1;pointer-events:all}
+.so:hover{border-color:var(--cyan);background:var(--foam)}
+.so.sel{border-color:var(--teal);background:rgba(33,67,69,.05)}
+.so .oi{font-size:26px;margin-bottom:5px;display:block}
+.so .on2{font-size:11px;font-weight:700;color:var(--t2);line-height:1.3}
+.so .os{font-size:10px;color:var(--t3);font-weight:600;margin-top:2px}
+.so.sel .on2{color:var(--teal)}
+.sc-cta{width:100%;padding:14px;background:var(--teal);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sc-cta:hover{background:#173032}
+.sc-cta:disabled{opacity:.3;cursor:not-allowed}
+
+/* ════ APP SHELL ════ */
+#app{display:none;height:100vh;flex-direction:column}
+#app.show{display:flex}
+.tb{height:48px;background:var(--teal);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0}
+.tb-logo{background:var(--cyan);border-radius:100px;padding:4px 13px;display:flex;align-items:center;gap:5px}
+.tb-logo span{font-weight:800;font-size:13px;color:var(--teal);font-family:'Manrope',sans-serif}
+.tb-sep{font-size:11px;color:rgba(255,255,255,.35);font-weight:600}
+.tb-pill{background:rgba(255,255,255,.1);border-radius:100px;padding:3px 11px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:5px}
+.tb-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+.tb-restart{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:5px 13px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.tb-restart:hover{background:rgba(255,255,255,.2)}
+.pbar{height:3px;background:rgba(255,255,255,.1);flex-shrink:0}
+.pfill{height:100%;background:var(--cyan);transition:width .5s ease}
+
+/* ════ SPLIT LAYOUT ════ */
+.split{flex:1;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;border-top:1px solid rgba(255,255,255,.06)}
+.panel{overflow:hidden;display:flex;flex-direction:column;position:relative}
+.p-lbl{height:32px;display:flex;align-items:center;padding:0 14px;gap:7px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,.08)}
+.p-lbl-left{background:#f8f8f8;color:var(--t3);border-right:1px solid #ddd}
+.p-lbl-right{background:#f0fafa;color:#00888e;border-left:2px solid var(--ck-teal)}
+.p-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#ddd transparent;background:var(--pos-bg)}
+.p-body-right{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#0f0f1a;position:relative}
+/* phone frame */
+.ph-frame{width:310px;height:calc(100% - 24px);max-height:580px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:var(--sh-xl),0 0 0 5px rgba(0,0,0,.4),0 0 0 7px rgba(255,255,255,.04);display:flex;flex-direction:column;flex-shrink:0}
+.ph-notch{height:20px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ph-pill{width:56px;height:3px;background:#222;border-radius:10px}
+.ph-url{height:24px;background:#f5f5f5;display:flex;align-items:center;padding:0 10px;flex-shrink:0;border-bottom:1px solid #eee}
+.ph-url span{font-size:9px;color:#888;font-family:'Manrope',sans-serif;flex:1;text-align:center}
+.ph-body{overflow-y:auto;flex:1;scrollbar-width:none}
+.ph-body::-webkit-scrollbar{display:none}
+
+/* ════ POS NAV ════ */
+.pos-nav{height:52px;background:var(--pos-nav);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;position:sticky;top:0;z-index:10}
+.pos-brand{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.3px;display:flex;align-items:center;gap:7px}
+.pos-mode-badge{background:rgba(255,255,255,.12);border-radius:100px;padding:2px 9px;font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.pos-cashier{font-size:11px;color:rgba(255,255,255,.5);font-weight:600;margin-left:auto;display:flex;align-items:center;gap:5px}
+
+/* ════ POS LAYOUT: 2-column ════ */
+.pos-layout{display:grid;grid-template-columns:1fr 320px;height:calc(100% - 52px);overflow:hidden}
+.pos-left{overflow-y:auto;background:var(--pos-bg);padding:12px;scrollbar-width:thin;scrollbar-color:#ccc transparent}
+.pos-right{background:#fff;border-left:1px solid #e8e8e8;display:flex;flex-direction:column;overflow:hidden}
+
+/* ════ PRODUCT AREA ════ */
+.pos-search{display:flex;align-items:center;gap:8px;background:#fff;border-radius:10px;padding:8px 12px;border:1.5px solid var(--border);margin-bottom:10px}
+.pos-search i{color:var(--t3);font-size:14px;flex-shrink:0}
+.pos-search input{border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:var(--t1);flex:1;background:transparent}
+.pos-cats-row{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.pos-cats-row::-webkit-scrollbar{display:none}
+.pos-c{background:#fff;border-radius:8px;padding:6px 13px;font-size:11px;font-weight:700;color:var(--t2);white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0;border:1.5px solid var(--border)}
+.pos-c.sel{background:var(--va-btn);color:var(--va-btn-t);border-color:var(--va-btn)}
+.pos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pos-item{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px 10px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;position:relative}
+.pos-item:hover{border-color:var(--va-acc);box-shadow:var(--sh-sm);transform:translateY(-1px)}
+.pos-item:active{transform:scale(.97)}
+.pos-item-emoji{font-size:28px;display:block;margin-bottom:5px}
+.pos-item-name{font-size:11px;font-weight:700;color:var(--t1);line-height:1.3;margin-bottom:4px}
+.pos-item-price{font-size:13px;font-weight:800;color:var(--va-acc)}
+.pos-item-qty{position:absolute;top:-5px;right:-5px;background:var(--va-btn);color:var(--va-btn-t);border-radius:50%;font-size:9px;font-weight:800;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+
+/* ════ ORDER PANEL (right) ════ */
+.order-hdr{padding:12px 14px;border-bottom:1px solid var(--n100);flex-shrink:0}
+.order-hdr-row{display:flex;align-items:center;justify-content:space-between}
+.order-ttl{font-size:13px;font-weight:800;color:var(--t1)}
+.order-count{font-size:11px;font-weight:700;color:var(--t3)}
+.order-clear{font-size:11px;font-weight:700;color:var(--red);cursor:pointer;background:var(--red-l);border-radius:100px;padding:3px 10px}
+.order-items{flex:1;overflow-y:auto;padding:8px 0}
+.order-item{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--n100)}
+.order-item-emoji{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+.order-item-info{flex:1;min-width:0}
+.order-item-name{font-size:11.5px;font-weight:700;color:var(--t1);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-item-price{font-size:11px;font-weight:700;color:var(--t3);margin-top:1px}
+.order-item-qty-ctrl{display:flex;align-items:center;gap:4px}
+.oq-btn{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--t2);transition:all .15s;flex-shrink:0}
+.oq-btn:hover{border-color:var(--va-acc);color:var(--va-acc)}
+.oq-num{font-size:13px;font-weight:800;color:var(--t1);min-width:18px;text-align:center}
+.order-item-subtotal{font-size:12px;font-weight:800;color:var(--t1);min-width:52px;text-align:right;flex-shrink:0}
+/* totals */
+.order-footer{border-top:1px solid var(--n100);padding:12px 14px;flex-shrink:0;background:#fff}
+.order-totals{margin-bottom:10px}
+.ot-row{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--t3);padding:2px 0}
+.ot-row.total{font-size:16px;font-weight:800;color:var(--t1);border-top:1px solid var(--n100);margin-top:6px;padding-top:8px}
+.order-charge-btn{display:block;width:100%;padding:13px;border-radius:10px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;background:var(--va-btn);color:var(--va-btn-t);transition:all .15s;text-align:center}
+.order-charge-btn:hover{opacity:.88}
+.order-charge-btn:disabled{opacity:.35;cursor:not-allowed}
+/* empty state */
+.order-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;color:var(--t3)}
+.order-empty-icon{font-size:40px;opacity:.25;margin-bottom:12px}
+
+/* ════ PAYMENT MODAL OVERLAY ════ */
+.modal-bg{position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:400px;overflow:hidden;box-shadow:var(--sh-xl)}
+.modal-hdr{padding:16px 20px 14px;border-bottom:1px solid var(--n100);display:flex;align-items:center;justify-content:space-between}
+.modal-ttl{font-size:16px;font-weight:800;color:var(--t1)}
+.modal-close{width:28px;height:28px;border-radius:50%;background:var(--n100);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--t2)}
+.modal-body{padding:18px 20px 20px}
+
+/* payment method tabs */
+.pm-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:18px}
+.pm-tab{border:2px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
+.pm-tab:hover{border-color:var(--t2)}
+.pm-tab.sel{border-color:var(--t1);background:#fafafa}
+.pm-tab-icon{font-size:22px;display:block;margin-bottom:4px}
+.pm-tab-name{font-size:10px;font-weight:700;color:var(--t2)}
+.pm-tab.sel .pm-tab-name{color:var(--t1)}
+/* aplazo tab special */
+.pm-tab.aplazo-tab{border-color:var(--ck-teal)}
+.pm-tab.aplazo-tab.sel{background:#f0fafa}
+/* amount summary */
+.pm-amount-box{background:var(--n100);border-radius:12px;padding:12px 14px;margin-bottom:16px;text-align:center}
+.pm-amount-lbl{font-size:11px;font-weight:700;color:var(--t3);margin-bottom:3px}
+.pm-amount-val{font-size:28px;font-weight:800;color:var(--t1)}
+/* cash fields */
+.pm-field-lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:6px}
+.pm-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:16px;font-weight:700;color:var(--t1);font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:12px}
+.pm-input:focus{border-color:var(--t1)}
+.pm-cambio{background:var(--green-l);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.pm-cambio-lbl{font-size:13px;font-weight:700;color:var(--green)}
+.pm-cambio-val{font-size:20px;font-weight:800;color:var(--green)}
+/* quick cash btns */
+.quick-cash{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.qc-btn{padding:6px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;background:#fff;transition:all .15s;font-family:'Plus Jakarta Sans',sans-serif}
+.qc-btn:hover{border-color:var(--t1);color:var(--t1)}
+/* card terminal sim */
+.card-terminal{background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;padding:20px;text-align:center;margin-bottom:14px}
+.card-terminal-screen{background:#0d1b2a;border-radius:10px;padding:16px;margin-bottom:12px;min-height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ct-amount{font-size:22px;font-weight:800;color:#fff;font-family:'Manrope',sans-serif}
+.ct-msg{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);margin-top:5px;font-family:'Manrope',sans-serif}
+.ct-status-dot{width:8px;height:8px;border-radius:50%;background:var(--ck-teal);display:inline-block;margin-right:5px;animation:blink 1s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ct-approved{color:var(--ck-teal);font-size:13px;font-weight:800;font-family:'Manrope',sans-serif}
+.ct-rejected{color:#ff4444;font-size:13px;font-weight:800;font-family:'Manrope',sans-serif}
+.card-icons{display:flex;justify-content:center;gap:8px}
+.card-icon-chip{width:36px;height:24px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff}
+/* spei */
+.spei-box{background:#f0f7ff;border:1.5px solid #c8d8f0;border-radius:12px;padding:14px;margin-bottom:14px}
+.spei-clabe{font-size:15px;font-weight:800;color:var(--t1);letter-spacing:2px;margin:6px 0}
+.spei-bank{font-size:12px;font-weight:600;color:var(--t3)}
+/* modal buttons */
+.modal-btn-row{display:flex;gap:8px}
+.modal-btn-sec{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;background:#fff;color:var(--t2);text-align:center;transition:all .15s}
+.modal-btn-pri{flex:1;padding:12px;border:none;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;background:var(--t1);color:#fff;text-align:center;transition:all .15s}
+.modal-btn-pri:hover{opacity:.85}
+.modal-btn-pri:disabled{opacity:.35;cursor:not-allowed}
+.modal-btn-green{background:var(--green)!important}
+.modal-btn-red{background:var(--red)!important}
+
+/* aplazo send channel */
+.az-channels{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.az-ch{border:2px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.az-ch:hover{border-color:var(--ck-teal)}
+.az-ch.sel{border-color:var(--ck-teal);background:#f0fafa}
+.az-ch-icon{font-size:22px;display:block;margin-bottom:4px}
+.az-ch-name{font-size:10px;font-weight:700;color:var(--t2)}
+.az-ch.sel .az-ch-name{color:var(--ck-teal)}
+/* waiting state */
+.wait-overlay{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;z-index:40}
+.wait-spinner{width:48px;height:48px;border-radius:50%;border:3px solid var(--n100);border-top-color:var(--va-acc);animation:spin .8s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* success overlay */
+.success-overlay{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;z-index:40}
+.sov-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.sov-green{background:var(--green-l)}
+.sov-red{background:var(--red-l)}
+
+/* ════ PHONE SCREENS ════ */
+.ph-idle{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;color:var(--t3)}
+.ph-idle-icon{font-size:44px;opacity:.25;margin-bottom:12px}
+/* whatsapp */
+.wa-bg{background:#e5ddd5;height:100%;display:flex;flex-direction:column}
+.wa-hdr{background:#075e54;padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.wa-av{width:30px;height:30px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.wa-nm{font-size:12px;font-weight:700;color:#fff}
+.wa-st{font-size:9px;color:rgba(255,255,255,.65)}
+.wa-body{flex:1;overflow-y:auto;padding:10px}
+.wa-bubble{background:#fff;border-radius:0 10px 10px 10px;padding:8px 10px;max-width:90%;margin-bottom:6px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.wa-from{font-size:9px;font-weight:800;color:#075e54;margin-bottom:3px}
+.wa-text{font-size:11px;color:#111;line-height:1.5;font-weight:600}
+.wa-link{font-size:11px;color:#007aff;font-weight:700;cursor:pointer;display:block;margin-top:3px;text-decoration:underline}
+.wa-time{font-size:8px;color:#aaa;text-align:right;margin-top:3px}
+.wa-bar{background:#f0f0f0;padding:7px 10px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.wa-inp{flex:1;background:#fff;border-radius:16px;padding:6px 10px;font-size:11px;color:#aaa;border:none;font-family:'Plus Jakarta Sans',sans-serif}
+.wa-send{width:28px;height:28px;border-radius:50%;background:#075e54;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px}
+/* sms */
+.sms-bg{background:#f5f5f5;height:100%;display:flex;flex-direction:column}
+.sms-hdr{background:#fff;padding:8px 12px;border-bottom:1px solid #eee;text-align:center;flex-shrink:0}
+.sms-nm{font-size:12px;font-weight:800;color:var(--t1)}
+.sms-st{font-size:9px;color:var(--t3)}
+.sms-body{flex:1;overflow-y:auto;padding:10px}
+.sms-bub{background:#e0e0e0;border-radius:10px 10px 10px 2px;padding:8px 10px;max-width:88%;margin-bottom:6px}
+.sms-text{font-size:11px;color:#111;line-height:1.5;font-weight:600}
+.sms-link{font-size:11px;color:#007aff;font-weight:700;cursor:pointer;display:block;margin-top:3px;text-decoration:underline}
+.sms-time{font-size:8px;color:#aaa;margin-top:3px}
+/* qr screen on phone */
+.qr-ph{background:#fff;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center}
+/* aplazo checkout in phone */
+.ck-wrap{background:#fff;min-height:100%;font-family:'Manrope',sans-serif}
+.ck-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px 8px;border-bottom:2.5px solid var(--ck-teal);position:sticky;top:0;background:#fff;z-index:20}
+.ck-logo{background:var(--cyan);border-radius:100px;padding:4px 10px;display:inline-flex;align-items:center;gap:4px}
+.ck-logo span{font-weight:800;font-size:11px;color:#060606}
+.ck-hd{width:24px;height:24px;border-radius:50%;border:1.5px solid #e0e0e0;display:flex;align-items:center;justify-content:center;color:#888;font-size:11px}
+.ck-x{width:22px;height:22px;border-radius:50%;background:#f0f0f0;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:11px}
+.ck-body{padding:12px 14px 24px}
+.pc{background:#f0fafa;border:2px solid var(--ck-teal);border-radius:12px;padding:10px;margin-bottom:10px}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.pc-sel{font-size:12px;font-weight:800;color:#111}
+.pc-first{font-size:9px;color:#888;font-weight:600}
+.pc-hide{background:#fff;border:1.5px solid #ddd;border-radius:100px;font-size:9px;font-weight:700;padding:2px 8px;cursor:pointer;color:#555}
+.e2-opt{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:9px;border:1.5px solid #e0e0e0;background:#fff;cursor:pointer;margin-bottom:5px;user-select:none;position:relative;transition:border-color .15s}
+.e2-opt.sel{border-color:#111}
+.e2-r{width:14px;height:14px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;position:relative;transition:all .15s}
+.e2-opt.sel .e2-r{border-color:#111;background:#111}
+.e2-rdot{width:5px;height:5px;border-radius:50%;background:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none}
+.e2-opt.sel .e2-rdot{display:block}
+.e2-name{font-size:11px;font-weight:700;color:#111}
+.e2-detail{font-size:9px;color:#888;font-weight:600;display:flex;justify-content:space-between;margin-top:1px}
+.e2-pop{position:absolute;top:5px;right:7px;font-size:8px;font-weight:700;background:#e8e8e8;color:#555;padding:1px 5px;border-radius:100px}
+.r-row{display:flex;justify-content:space-between;font-size:12px;font-weight:600;padding:3px 0;color:#555}
+.r-row b{color:#111;font-weight:800}
+.r-row.total{font-size:14px;font-weight:800;color:#111;border-top:1px solid #eee;margin-top:5px;padding-top:7px}
+.r-row.disc{color:#22863a;font-weight:700}
+.tl-hoy{display:flex;align-items:center;gap:7px;padding:7px 9px;font-size:12px;font-weight:800;color:#111;background:var(--ck-teal);border-radius:8px;margin-bottom:2px}
+.tl-dot-f{width:10px;height:10px;border-radius:50%;background:#111;flex-shrink:0}
+.tl-line{width:1.5px;height:12px;background:#e0e0e0;margin-left:4px}
+.tl-row{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:11px;font-weight:600;color:#555}
+.tl-dot-e{width:10px;height:10px;border-radius:50%;border:1.5px solid #ccc;background:#fff;flex-shrink:0}
+.mp-card{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1.5px solid #e0e0e0;border-radius:11px;background:#fff}
+.mp-sel{width:16px;height:16px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mp-sel::after{content:'';width:6px;height:6px;border-radius:50%;background:#111;display:block}
+.mp-visa{width:34px;height:22px;background:#1a1a5e;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:8px;font-weight:800}
+.cb-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1.5px solid #e0e0e0;border-radius:11px;margin:6px 0 10px;cursor:pointer;user-select:none;transition:all .15s}
+.cb-row.on{border-color:var(--ck-teal);background:#f0fafa}
+.cpn{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:11px;font-weight:600;color:#888;border-top:1px solid #f0f0f0}
+.cpn-link{color:#111;font-weight:700;text-decoration:underline;cursor:pointer}
+.ck-cta{display:block;width:100%;padding:12px;background:#111;color:#fff;border:none;border-radius:100px;font-size:13px;font-weight:800;text-align:center;cursor:pointer;font-family:'Manrope',sans-serif;margin-top:3px;transition:all .15s}
+/* az login small */
+.az-login-sm{padding:16px;background:#fff;min-height:100%}
+/* otp small */
+.otp-boxes{display:flex;gap:5px;justify-content:center;margin-bottom:12px}
+.otp-box{width:36px;height:40px;border:2px solid #ddd;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#111;transition:all .2s}
+.otp-box.filled{border-color:#111;background:#f0fffe}
+/* phone done */
+.ph-done{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:24px;text-align:center;background:#fff;font-family:'Manrope',sans-serif}
+.ph-done-circle{width:80px;height:80px;border-radius:50%;background:#f0fffe;border:3px solid var(--ck-teal);display:flex;align-items:center;justify-content:center;margin-bottom:14px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="sc">
+    <div class="sc-logo"><span>aplazo</span></div>
+    <h1>POS Simulator — Offline</h1>
+    <p>Simula el flujo de venta presencial con todas las formas de cobro y la integracion de Aplazo.</p>
+    <div class="sc-step">
+      <div class="sc-lbl"><span class="sn">1</span> Giro del comercio</div>
+      <div class="g4">
+        <div class="so on" data-v="moda" onclick="pickV(this)"><span class="oi">👟</span><div class="on2">Moda</div><div class="os">Ropa, calzado</div></div>
+        <div class="so on" data-v="super" onclick="pickV(this)"><span class="oi">🛒</span><div class="on2">Supermercado</div><div class="os">Abarrotes</div></div>
+        <div class="so on" data-v="entret" onclick="pickV(this)"><span class="oi">🎬</span><div class="on2">Entretenimiento</div><div class="os">Cine, eventos</div></div>
+        <div class="so on" data-v="viajes" onclick="pickV(this)"><span class="oi">🚌</span><div class="on2">Viajes</div><div class="os">Autobus</div></div>
+      </div>
+    </div>
+    <div class="sc-step" id="step2">
+      <div class="sc-lbl"><span class="sn">2</span> Canal del cliente (para Aplazo)</div>
+      <div class="g2">
+        <div class="so" data-c="app" onclick="pickC(this)"><span class="oi">📲</span><div class="on2">App Aplazo</div><div class="os">Directo al checkout</div></div>
+        <div class="so" data-c="web" onclick="pickC(this)"><span class="oi">🌐</span><div class="on2">Web movil</div><div class="os">Login + OTP + checkout</div></div>
+      </div>
+    </div>
+    <button class="sc-cta" id="go-btn" disabled onclick="launch()"><i class="bi bi-play-fill"></i> Iniciar POS</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="tb">
+    <div class="tb-logo"><span>aplazo</span></div>
+    <span class="tb-sep">pos simulator</span>
+    <div class="tb-pill"><div class="tb-dot"></div><span id="tb-lbl">POS Demo</span></div>
+    <button class="tb-restart" onclick="restart()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:10%"></div></div>
+  <div class="split">
+    <!-- LEFT POS -->
+    <div class="panel">
+      <div class="p-lbl p-lbl-left"><i class="bi bi-display"></i><span>POS — Cajero</span><span id="pos-step-lbl" style="margin-left:auto;text-transform:none;letter-spacing:0;font-weight:600;font-size:10px"></span></div>
+      <div class="p-body" id="pos-panel"></div>
+    </div>
+    <!-- RIGHT PHONE -->
+    <div class="panel">
+      <div class="p-lbl p-lbl-right"><i class="bi bi-phone" style="color:var(--ck-teal)"></i><span>Telefono del cliente</span><span id="ph-lbl" style="margin-left:auto;font-size:9px;text-transform:none;letter-spacing:0;font-weight:600"></span></div>
+      <div class="p-body-right" id="phone-stage"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════
+var COM5=0.0499,COM8=0.0799,IVA=0.16,CB=80;
+var DATES=['26 Jun','10 Jul','24 Jul','8 Ago','22 Ago','5 Sep'];
+function fmt(n){return '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function getPlans(m){
+  var c5=m*COM5,c8=m*COM8,i5=c5*IVA,i8=c8*IVA;
+  return[{n:3,pmt:m/3,com:0,iva:0,total:m,tasa:0},{n:5,pmt:(m+c5+i5)/5,com:c5,iva:i5,total:m+c5+i5,tasa:COM5*12*100},{n:8,pmt:(m+c8+i8)/8,com:c8,iva:i8,total:m+c8+i8,tasa:COM8*12*100}];
+}
+
+var V={
+  moda:{name:'Deportotal',cls:'v-moda',icon:'👟',cats:['Todo','Calzado','Ropa','Accesorios'],
+    products:[
+      {id:1,e:'🎒',cat:1,name:'Mochila Deportiva Ka6767',price:999},
+      {id:2,e:'👟',cat:1,name:'Tenis Upcourt 6 Hombre',price:1799},
+      {id:3,e:'🥾',cat:1,name:'Tenis Terrex Anylander',price:1599},
+      {id:4,e:'👕',cat:2,name:'Playera Dri-FIT Training',price:899},
+      {id:5,e:'🩱',cat:2,name:'Biker Adizero Hombre',price:699},
+      {id:6,e:'🧤',cat:3,name:'Guantes Weightlifting',price:549},
+    ]},
+  super:{name:'FreshMart',cls:'v-super',icon:'🛒',cats:['Todo','Frutas','Despensa','Bebidas'],
+    products:[
+      {id:1,e:'🍅',cat:1,name:'Tomate Saladet x kg',price:55},
+      {id:2,e:'🥑',cat:1,name:'Aguacate Hass x kg',price:54},
+      {id:3,e:'🥦',cat:1,name:'Brocoli pieza',price:42},
+      {id:4,e:'🍞',cat:2,name:'Pan de Caja Blanco 620g',price:43},
+      {id:5,e:'🌾',cat:2,name:'Arroz Super Extra 900g',price:15},
+      {id:6,e:'🥛',cat:3,name:'Leche Entera 1L',price:28},
+    ]},
+  entret:{name:'CineMax',cls:'v-entret',icon:'🎬',cats:['Todo','2D','3D','IMAX'],
+    products:[
+      {id:1,e:'🎟️',cat:1,name:'Boleto 2D General',price:155},
+      {id:2,e:'🎟️',cat:1,name:'Boleto 2D Preferente',price:185},
+      {id:3,e:'🎭',cat:2,name:'Boleto 3D General',price:195},
+      {id:4,e:'🎬',cat:3,name:'Boleto IMAX',price:285},
+      {id:5,e:'🍿',cat:1,name:'Combo Palomitas Gde',price:135},
+      {id:6,e:'🥤',cat:1,name:'Combo Bebida XL',price:95},
+    ]},
+  viajes:{name:'ViajaBus',cls:'v-viajes',icon:'🚌',cats:['Todo','CDMX','Regionales'],
+    products:[
+      {id:1,e:'🚌',cat:1,name:'CDMX → Queretaro',price:645},
+      {id:2,e:'🚌',cat:1,name:'CDMX → Guadalajara',price:890},
+      {id:3,e:'🚌',cat:1,name:'CDMX → Monterrey',price:780},
+      {id:4,e:'🚌',cat:2,name:'Queretaro → GDL',price:420},
+      {id:5,e:'🛡️',cat:1,name:'Seguro de Viaje',price:199},
+    ]},
+};
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+var S={
+  vert:null,canal:null,
+  cat:0,cart:{},
+  modal:null,
+  payMethod:'aplazo',
+  cashReceived:'',
+  cardStatus:null,
+  azChannel:'whatsapp',
+  posState:'catalog',
+  phonePage:'idle',
+  ckPlan:1,ckCB:false,ckDates:false,ckMp:true,
+  otpVal:'',
+  waitingStatus:null, // null | 'pending'
+  showResend:false,
+};
+
+// ════════════════════════════════════════
+// SETUP
+// ════════════════════════════════════════
+function pickV(el){document.querySelectorAll('[data-v]').forEach(function(e){e.classList.remove('sel');});el.classList.add('sel');S.vert=el.dataset.v;document.querySelectorAll('#step2 .so').forEach(function(e){e.classList.add('on');});chk();}
+function pickC(el){document.querySelectorAll('[data-c]').forEach(function(e){e.classList.remove('sel');});el.classList.add('sel');S.canal=el.dataset.c;chk();}
+function chk(){document.getElementById('go-btn').disabled=!(S.vert&&S.canal);}
+function launch(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('app').classList.add('show');
+  var v=V[S.vert];
+  document.body.className=v.cls;
+  document.getElementById('tb-lbl').textContent=v.icon+' '+v.name+' · Offline · '+(S.canal==='app'?'App':'Web');
+  renderAll();
+}
+function restart(){
+  document.querySelectorAll('.so').forEach(function(e){e.classList.remove('sel');});
+  document.querySelectorAll('#step2 .so').forEach(function(e){e.classList.remove('on');});
+  S={vert:null,canal:null,cat:0,cart:{},modal:null,payMethod:'aplazo',cashReceived:'',cardStatus:null,azChannel:'whatsapp',posState:'catalog',phonePage:'idle',ckPlan:1,ckCB:false,ckDates:false,ckMp:true,otpVal:'',waitingStatus:null,showResend:false};
+  document.getElementById('go-btn').disabled=true;
+  document.getElementById('setup').style.display='flex';
+  document.getElementById('app').classList.remove('show');
+  document.body.className='';
+}
+
+// ════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════
+function cartTotal(){var v=V[S.vert];return v.products.reduce(function(s,p){return s+(S.cart[p.id]||0)*p.price;},0);}
+function cartCount(){return Object.values(S.cart).reduce(function(a,b){return a+b;},0);}
+function filteredProducts(){
+  var v=V[S.vert];
+  if(S.cat===0) return v.products;
+  return v.products.filter(function(p){return p.cat===S.cat;});
+}
+
+// ════════════════════════════════════════
+// RENDER ALL
+// ════════════════════════════════════════
+function renderAll(){renderPOS();renderPhone();}
+
+// ════════════════════════════════════════
+// POS
+// ════════════════════════════════════════
+function renderPOS(){
+  document.getElementById('pos-panel').innerHTML=buildPOS();
+}
+function buildPOS(){
+  var v=V[S.vert];
+  // overlay states
+  if(S.posState==='waiting'){
+    return buildPOSWaiting();
+  }
+  if(S.posState==='pos-success'){
+    return buildPOSSuccess();
+  }
+  // catalog + right panel with order
+  var cats='';
+  for(var i=0;i<v.cats.length;i++){
+    cats+='<div class="pos-c'+(S.cat===i?' sel':'')+'" onclick="setCat('+i+')">'+v.cats[i]+'</div>';
+  }
+  var items='';
+  var fp=filteredProducts();
+  for(var j=0;j<fp.length;j++){
+    var p=fp[j];
+    var qty=S.cart[p.id]||0;
+    items+='<div class="pos-item" onclick="addItem('+p.id+')">'+
+    (qty>0?'<div class="pos-item-qty">'+qty+'</div>':'')+
+    '<span class="pos-item-emoji">'+p.e+'</span>'+
+    '<div class="pos-item-name">'+p.name+'</div>'+
+    '<div class="pos-item-price">'+fmt(p.price)+'</div>'+
+    '</div>';
+  }
+  // order items
+  var cartItems=v.products.filter(function(p){return S.cart[p.id];});
+  var orderRows='';
+  for(var k=0;k<cartItems.length;k++){
+    var it=cartItems[k];
+    var q=S.cart[it.id];
+    orderRows+='<div class="order-item">'+
+    '<div class="order-item-emoji">'+it.e+'</div>'+
+    '<div class="order-item-info"><div class="order-item-name">'+it.name+'</div><div class="order-item-price">'+fmt(it.price)+' c/u</div></div>'+
+    '<div class="order-item-qty-ctrl">'+
+    '<div class="oq-btn" onclick="decItem('+it.id+')">-</div>'+
+    '<div class="oq-num">'+q+'</div>'+
+    '<div class="oq-btn" onclick="incItem('+it.id+')">+</div>'+
+    '</div>'+
+    '<div class="order-item-subtotal">'+fmt(it.price*q)+'</div>'+
+    '</div>';
+  }
+  var total=cartTotal();
+  var hasCart=cartCount()>0;
+  var orderSection=hasCart?
+    '<div class="order-items">'+orderRows+'</div>'+
+    '<div class="order-footer">'+
+    '<div class="order-totals">'+
+    '<div class="ot-row"><span>Subtotal</span><span>'+fmt(total)+'</span></div>'+
+    '<div class="ot-row"><span>IVA incl.</span><span>'+fmt(total*0.16/1.16)+'</span></div>'+
+    '<div class="ot-row total"><span>Total</span><span>'+fmt(total)+'</span></div>'+
+    '</div>'+
+    '<button class="order-charge-btn" onclick="openPayment()">Cobrar '+fmt(total)+'</button>'+
+    '</div>'
+    :
+    '<div class="order-empty"><div class="order-empty-icon">🧾</div><div style="font-size:13px;font-weight:700;color:var(--t2)">Orden vacia</div><div style="font-size:11px;font-weight:600;margin-top:4px">Toca un producto para agregarlo</div></div>';
+
+  var modalHtml=S.modal==='payment'?buildPaymentModal():'';
+
+  return '<div style="display:flex;flex-direction:column;height:100%;position:relative">'+
+  '<div class="pos-nav">'+
+  '<div class="pos-brand">'+v.icon+' '+v.name+'</div>'+
+  '<div class="pos-mode-badge">Caja 1</div>'+
+  '<div class="pos-cashier"><i class="bi bi-person-circle"></i> Cajero</div>'+
+  '</div>'+
+  '<div class="pos-layout">'+
+  '<div class="pos-left">'+
+  '<div class="pos-search"><i class="bi bi-search"></i><input placeholder="Buscar producto..." readonly></div>'+
+  '<div class="pos-cats-row">'+cats+'</div>'+
+  '<div class="pos-grid">'+items+'</div>'+
+  '</div>'+
+  '<div class="pos-right">'+
+  '<div class="order-hdr">'+
+  '<div class="order-hdr-row"><div class="order-ttl">Orden actual</div>'+(hasCart?'<div class="order-count">'+cartCount()+' art.</div><div class="order-clear" onclick="clearCart()">Limpiar</div>':'')+'</div>'+
+  '</div>'+
+  orderSection+
+  '</div>'+
+  '</div>'+
+  modalHtml+
+  '</div>';
+}
+
+function buildPOSWaiting(){
+  var v=V[S.vert];
+  var total=cartTotal();
+  var items=v.products.filter(function(p){return S.cart[p.id];});
+  var rows='';
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    rows+='<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>'+it.name+'</span><span>'+fmt(it.price*(S.cart[it.id]||1))+'</span></div>';
+  }
+  var chMsg=S.azChannel==='whatsapp'?'Se envio el link via WhatsApp ✓':S.azChannel==='sms'?'Se envio el link via SMS ✓':'El cliente esta escaneando el QR';
+  var waitingStatusMsg=S.waitingStatus==='pending'?
+    '<div style="background:var(--red-l);border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;color:var(--red);width:100%;max-width:340px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="bi bi-clock"></i> Pendiente de pago — el cliente aun no ha completado</div>':
+    '';
+  var resendPanel=S.showResend?
+    '<div style="background:#fff;border:1.5px solid var(--ck-teal);border-radius:14px;padding:14px;width:100%;max-width:340px;margin-bottom:12px;text-align:left">'+
+    '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:10px">Reenviar por otro canal</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">'+
+    '<div class="az-ch'+(S.azChannel==='whatsapp'?' sel':'')+'" onclick="S.azChannel=\'whatsapp\';renderPOS()" style="border:2px solid '+(S.azChannel==='whatsapp'?'var(--ck-teal)':'var(--border)')+';border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;background:'+(S.azChannel==='whatsapp'?'#f0fafa':'#fff')+'"><span style="font-size:20px;display:block;margin-bottom:3px">💬</span><div style="font-size:10px;font-weight:700;color:'+(S.azChannel==='whatsapp'?'var(--ck-teal)':'var(--t2)')+'">WhatsApp</div></div>'+
+    '<div onclick="S.azChannel=\'sms\';renderPOS()" style="border:2px solid '+(S.azChannel==='sms'?'var(--ck-teal)':'var(--border)')+';border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;background:'+(S.azChannel==='sms'?'#f0fafa':'#fff')+'"><span style="font-size:20px;display:block;margin-bottom:3px">📱</span><div style="font-size:10px;font-weight:700;color:'+(S.azChannel==='sms'?'var(--ck-teal)':'var(--t2)')+'">SMS</div></div>'+
+    '<div onclick="S.azChannel=\'qr\';renderPOS()" style="border:2px solid '+(S.azChannel==='qr'?'var(--ck-teal)':'var(--border)')+';border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;background:'+(S.azChannel==='qr'?'#f0fafa':'#fff')+'"><span style="font-size:20px;display:block;margin-bottom:3px">📷</span><div style="font-size:10px;font-weight:700;color:'+(S.azChannel==='qr'?'var(--ck-teal)':'var(--t2)')+'">QR</div></div>'+
+    '</div>'+
+    (S.azChannel!=='qr'?'<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:6px">Numero del cliente</div><div style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--t1);background:#f8f8f8;margin-bottom:10px">55 1234 5678</div>':'')+
+    '<div style="display:flex;gap:8px">'+
+    '<button onclick="S.showResend=false;renderPOS()" style="flex:1;padding:10px;border:1.5px solid var(--border);border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;background:#fff;color:var(--t2)">Cancelar</button>'+
+    '<button onclick="doResend()" style="flex:1;padding:10px;border:none;border-radius:100px;font-size:12px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;background:var(--ck-teal);color:#111">Enviar link</button>'+
+    '</div>'+
+    '</div>'
+    :'';
+  return '<div style="height:100%;display:flex;flex-direction:column">'+
+  '<div class="pos-nav"><div class="pos-brand">'+v.icon+' '+v.name+'</div><div class="pos-mode-badge">Caja 1</div><div class="pos-cashier"><i class="bi bi-person-circle"></i> Cajero</div></div>'+
+  '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;background:var(--pos-bg)">'+
+  '<div class="wait-spinner"></div>'+
+  '<div style="font-size:18px;font-weight:800;color:var(--t1);margin-bottom:6px">Esperando confirmacion</div>'+
+  '<div style="font-size:13px;color:var(--t3);font-weight:600;line-height:1.6;max-width:280px;margin-bottom:14px">El cliente debe completar el pago en su telefono con Aplazo</div>'+
+  '<div style="background:var(--green-l);border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;color:var(--green);width:100%;max-width:340px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="bi bi-check-circle-fill"></i> '+chMsg+'</div>'+
+  waitingStatusMsg+
+  '<div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px;width:100%;max-width:340px;margin-bottom:14px;text-align:left">'+
+  '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:8px">Resumen del pedido</div>'+
+  rows+
+  '<div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid var(--border);margin-top:6px;padding-top:8px"><span>Total</span><span>'+fmt(total)+'</span></div>'+
+  '</div>'+
+  resendPanel+
+  '<div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:340px">'+
+  '<button onclick="checkStatus()" style="padding:12px;border:none;border-radius:100px;font-size:14px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;background:var(--va-btn);color:var(--va-btn-t)">Consultar estado</button>'+
+  (!S.showResend?'<button onclick="S.showResend=true;S.waitingStatus=null;renderPOS()" style="padding:12px;border:1.5px solid var(--border);border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;background:#fff;color:var(--t2)">Reenviar link</button>':'')+
+  '<button onclick="cancelOrder()" style="padding:12px;border:1.5px solid var(--red);border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;background:#fff;color:var(--red)">Cancelar / Salir</button>'+
+  '</div></div></div>';
+}
+
+function buildPOSSuccess(){
+  var v=V[S.vert];
+  var total=cartTotal();
+  var plans=getPlans(total);
+  var p=plans[S.ckPlan];
+  var orderNum=Math.floor(Math.random()*90000+10000);
+  var method={'efectivo':'Efectivo','tarjeta':'Tarjeta bancaria','aplazo':'Aplazo','spei':'SPEI / Transferencia'}[S.payMethod]||'Aplazo';
+  return '<div style="height:100%;display:flex;flex-direction:column">'+
+  '<div class="pos-nav"><div class="pos-brand">'+v.icon+' '+v.name+'</div><div class="pos-mode-badge">Caja 1</div></div>'+
+  '<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;background:var(--pos-bg)">'+
+  '<div style="width:64px;height:64px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)">&#9989;</div>'+
+  '<div style="font-size:22px;font-weight:800;color:var(--t1);margin-bottom:6px">Pago completado!</div>'+
+  '<div style="font-size:13px;color:var(--t3);font-weight:600;margin-bottom:20px">Orden procesada exitosamente</div>'+
+  '<div style="background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:18px;width:100%;max-width:340px;text-align:left">'+
+  '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--n100)">'+
+  (S.payMethod==='aplazo'?'<div style="background:var(--cyan);border-radius:100px;padding:3px 10px;font-size:11px;font-weight:800;color:var(--teal);font-family:Manrope,sans-serif">aplazo</div>':'<span style="font-size:13px;font-weight:700;color:var(--t1)">'+method+'</span>')+
+  '<span style="font-size:12px;font-weight:600;color:var(--green);margin-left:auto">&#10003; Autorizado</span>'+
+  '</div>'+
+  '<div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:8px">Orden #'+orderNum+'</div>'+
+  '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Total cobrado</span><span style="font-weight:800;color:var(--t1)">'+fmt(total)+'</span></div>'+
+  '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Metodo</span><span>'+method+'</span></div>'+
+  (S.payMethod==='aplazo'?'<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Plan</span><span>'+p.n+' plazos quincenales</span></div>':'')+
+  '</div>'+
+  '<button onclick="newOrder()" style="margin-top:18px;padding:12px 32px;border-radius:100px;border:2px solid var(--border);background:#fff;color:var(--t2);font-size:14px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Nueva orden</button>'+
+  '</div></div>';
+}
+
+function buildPaymentModal(){
+  var total=cartTotal();
+  // payment tabs
+  var tabs=''+
+  '<div class="pm-tab'+(S.payMethod==='efectivo'?' sel':'')+'" onclick="setPayMethod(\'efectivo\')"><span class="pm-tab-icon">💵</span><div class="pm-tab-name">Efectivo</div></div>'+
+  '<div class="pm-tab" style="opacity:.38;cursor:not-allowed" title="No disponible en demo"><span class="pm-tab-icon">💳</span><div class="pm-tab-name">Tarjeta</div></div>'+
+  '<div class="pm-tab aplazo-tab'+(S.payMethod==='aplazo'?' sel':'')+'" onclick="setPayMethod(\'aplazo\')"><span class="pm-tab-icon">🅰</span><div class="pm-tab-name">Aplazo</div></div>'+
+  '<div class="pm-tab" style="opacity:.38;cursor:not-allowed" title="No disponible en demo"><span class="pm-tab-icon">🏦</span><div class="pm-tab-name">SPEI</div></div>';
+  var body='<div class="pm-amount-box"><div class="pm-amount-lbl">Total a cobrar</div><div class="pm-amount-val">'+fmt(total)+'</div></div>';
+  var footer='';
+
+  if(S.payMethod==='efectivo'){
+    var received=parseFloat(S.cashReceived)||0;
+    var cambio=received-total;
+    body+=
+    '<div class="pm-field-lbl">Efectivo recibido</div>'+
+    '<input class="pm-input" id="cash-inp" type="number" placeholder="$0.00" value="'+S.cashReceived+'" oninput="setCash(this.value)" autofocus>'+
+    '<div class="quick-cash">'+
+    [Math.ceil(total/100)*100, Math.ceil(total/500)*500, Math.ceil(total/1000)*1000, Math.ceil(total/2000)*2000].filter(function(v,i,a){return a.indexOf(v)===i;}).slice(0,4).map(function(v){return '<button class="qc-btn" onclick="setCash('+v+')">'+fmt(v)+'</button>';}).join('')+
+    '</div>'+
+    (received>=total?'<div class="pm-cambio"><div class="pm-cambio-lbl">Cambio a dar</div><div class="pm-cambio-val">'+fmt(cambio)+'</div></div>':'');
+    footer='<div class="modal-btn-row"><button class="modal-btn-sec" onclick="closeModal()">Cancelar</button><button class="modal-btn-pri modal-btn-green" '+(received<total?'disabled':'')+' onclick="finishPayment()">Confirmar pago</button></div>';
+  }
+  else if(S.payMethod==='tarjeta'){
+    var cs=S.cardStatus;
+    body+=
+    '<div class="card-terminal">'+
+    '<div class="card-terminal-screen">'+
+    (cs===null?'<div class="ct-amount">'+fmt(total)+'</div><div class="ct-msg"><span class="ct-status-dot"></span>Esperando tarjeta...</div>':'')+
+    (cs==='processing'?'<div class="ct-amount">'+fmt(total)+'</div><div class="ct-msg"><span class="ct-status-dot"></span>Procesando...</div>':'')+
+    (cs==='approved'?'<div class="ct-approved">&#10003; APROBADO<br><span style="font-size:11px;font-weight:600;color:rgba(0,194,199,.8)">Transaccion completada</span></div>':'')+
+    (cs==='rejected'?'<div class="ct-rejected">&#10005; RECHAZADA<br><span style="font-size:11px;font-weight:600;color:rgba(255,68,68,.7)">Intente otra forma de pago</span></div>':'')+
+    '</div>'+
+    '<div class="card-icons">'+
+    '<div class="card-icon-chip" style="background:#1a1a5e">VISA</div>'+
+    '<div class="card-icon-chip" style="background:#eb001b">MC</div>'+
+    '<div class="card-icon-chip" style="background:#2671b9">AMEX</div>'+
+    '<div class="card-icon-chip" style="background:#016fd0;font-size:8px">DÉBITO</div>'+
+    '</div>'+
+    '</div>';
+    if(cs===null) footer='<div class="modal-btn-row"><button class="modal-btn-sec" onclick="closeModal()">Cancelar</button><button class="modal-btn-pri" onclick="processCard()">Insertar / Aproximar tarjeta</button></div>';
+    else if(cs==='processing') footer='<div style="text-align:center;font-size:12px;font-weight:600;color:var(--t3);padding:4px">Procesando...</div>';
+    else if(cs==='approved') footer='<div class="modal-btn-row"><button class="modal-btn-pri modal-btn-green" onclick="finishPayment()">Listo — Imprimir ticket</button></div>';
+    else if(cs==='rejected') footer='<div class="modal-btn-row"><button class="modal-btn-sec" onclick="S.cardStatus=null;renderPOS()">Reintentar</button><button class="modal-btn-pri" onclick="setPayMethod(\'efectivo\')">Otra forma de pago</button></div>';
+  }
+  else if(S.payMethod==='aplazo'){
+    body+=
+    '<div class="az-channels">'+
+    '<div class="az-ch'+(S.azChannel==='whatsapp'?' sel':'')+'" onclick="setAzCh(\'whatsapp\')"><span class="az-ch-icon">💬</span><div class="az-ch-name">WhatsApp</div></div>'+
+    '<div class="az-ch'+(S.azChannel==='sms'?' sel':'')+'" onclick="setAzCh(\'sms\')"><span class="az-ch-icon">📱</span><div class="az-ch-name">SMS</div></div>'+
+    '<div class="az-ch'+(S.azChannel==='qr'?' sel':'')+'" onclick="setAzCh(\'qr\')"><span class="az-ch-icon">📷</span><div class="az-ch-name">Codigo QR</div></div>'+
+    '</div>'+
+    (S.azChannel!=='qr'?
+    '<div class="pm-field-lbl">Numero del cliente</div>'+
+    '<input class="pm-input" value="55 1234 5678" readonly>':
+    '<div style="text-align:center;padding:8px 0"><div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px">El cliente escanea este codigo</div>'+buildQRsvg(80)+'</div>');
+    footer='<div class="modal-btn-row"><button class="modal-btn-sec" onclick="closeModal()">Cancelar</button><button class="modal-btn-pri" style="background:var(--ck-teal);color:#111" onclick="sendAplazo()">'+(S.azChannel==='qr'?'Mostrar QR al cliente':'Enviar link')+'</button></div>';
+  }
+  else if(S.payMethod==='spei'){
+    body+=
+    '<div class="spei-box">'+
+    '<div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:4px">CLABE para transferencia</div>'+
+    '<div class="spei-clabe">7474 0000 0000 0001 23</div>'+
+    '<div class="spei-bank">Banco: STP / Aplazo · Beneficiario: '+V[S.vert].name+'</div>'+
+    '<div style="font-size:11px;font-weight:700;color:var(--t3);margin-top:8px">Concepto (referencia)</div>'+
+    '<div style="font-size:13px;font-weight:800;color:var(--t1);margin-top:2px">CAJA01-'+Math.floor(Math.random()*9000+1000)+'</div>'+
+    '</div>'+
+    '<div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:12px;line-height:1.6">Pide al cliente que realice la transferencia. El pago se confirmara automaticamente.</div>';
+    footer='<div class="modal-btn-row"><button class="modal-btn-sec" onclick="closeModal()">Cancelar</button><button class="modal-btn-pri" onclick="finishPayment()">Confirmar transferencia</button></div>';
+  }
+
+  return '<div class="modal-bg" onclick="event.target===this&&closeModal()"><div class="modal">'+
+  '<div class="modal-hdr"><div class="modal-ttl">Metodo de pago</div><button class="modal-close" onclick="closeModal()"><i class="bi bi-x"></i></button></div>'+
+  '<div class="modal-body"><div class="pm-tabs">'+tabs+'</div>'+body+footer+'</div>'+
+  '</div></div>';
+}
+
+function buildQRsvg(size){
+  var s=size;
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto"><rect width="140" height="140" fill="white"/><g fill="#111"><rect x="10" y="10" width="35" height="35" rx="3"/><rect x="14" y="14" width="27" height="27" rx="2" fill="white"/><rect x="19" y="19" width="17" height="17" rx="1"/><rect x="95" y="10" width="35" height="35" rx="3"/><rect x="99" y="14" width="27" height="27" rx="2" fill="white"/><rect x="104" y="19" width="17" height="17" rx="1"/><rect x="10" y="95" width="35" height="35" rx="3"/><rect x="14" y="99" width="27" height="27" rx="2" fill="white"/><rect x="19" y="104" width="17" height="17" rx="1"/><rect x="55" y="10" width="5" height="5"/><rect x="65" y="10" width="5" height="5"/><rect x="75" y="10" width="5" height="5"/><rect x="55" y="20" width="5" height="5"/><rect x="75" y="20" width="5" height="5"/><rect x="60" y="30" width="5" height="5"/><rect x="70" y="30" width="5" height="5"/><rect x="55" y="55" width="5" height="5"/><rect x="70" y="55" width="5" height="5"/><rect x="85" y="55" width="5" height="5"/><rect x="100" y="55" width="5" height="5"/><rect x="60" y="65" width="5" height="5"/><rect x="80" y="65" width="5" height="5"/><rect x="95" y="65" width="5" height="5"/><rect x="55" y="75" width="5" height="5"/><rect x="65" y="75" width="5" height="5"/><rect x="90" y="75" width="5" height="5"/><rect x="10" y="55" width="5" height="5"/><rect x="20" y="55" width="5" height="5"/><rect x="35" y="55" width="5" height="5"/><rect x="15" y="65" width="5" height="5"/><rect x="30" y="65" width="5" height="5"/><rect x="40" y="65" width="5" height="5"/><rect x="10" y="75" width="5" height="5"/><rect x="25" y="75" width="5" height="5"/><rect x="40" y="75" width="5" height="5"/><rect x="55" y="95" width="5" height="5"/><rect x="70" y="95" width="5" height="5"/><rect x="85" y="95" width="5" height="5"/><rect x="60" y="105" width="5" height="5"/><rect x="80" y="105" width="5" height="5"/><rect x="100" y="105" width="5" height="5"/><rect x="55" y="115" width="5" height="5"/><rect x="65" y="115" width="5" height="5"/><rect x="90" y="115" width="5" height="5"/><rect x="110" y="55" width="5" height="5"/><rect x="120" y="55" width="5" height="5"/><rect x="110" y="65" width="5" height="5"/><rect x="120" y="75" width="5" height="5"/><rect x="110" y="85" width="5" height="5"/></g><circle cx="70" cy="70" r="11" fill="#00C2C7"/><text x="70" y="74" text-anchor="middle" font-size="10" font-weight="800" fill="#111" font-family="Manrope">a</text></svg>';
+}
+
+// ════════════════════════════════════════
+// POS ACTIONS
+// ════════════════════════════════════════
+function setCat(i){S.cat=i;renderPOS();}
+function addItem(id){S.cart[id]=(S.cart[id]||0)+1;renderPOS();}
+function incItem(id){S.cart[id]=(S.cart[id]||0)+1;renderPOS();}
+function decItem(id){if(S.cart[id]>1)S.cart[id]--;else delete S.cart[id];renderPOS();}
+function clearCart(){S.cart={};renderPOS();}
+function openPayment(){S.modal='payment';S.cardStatus=null;S.cashReceived='';renderPOS();}
+function closeModal(){S.modal=null;renderPOS();}
+function setPayMethod(m){S.payMethod=m;S.cardStatus=null;S.cashReceived='';renderPOS();}
+function setAzCh(c){S.azChannel=c;renderPOS();}
+function setCash(v){S.cashReceived=String(v);renderPOS();}
+
+function processCard(){
+  S.cardStatus='processing';
+  renderPOS();
+  setTimeout(function(){
+    S.cardStatus='approved'; // 90% approve for demo
+    renderPOS();
+  },2000);
+}
+
+function sendAplazo(){
+  S.modal=null;
+  S.posState='waiting';
+  S.phonePage=S.azChannel==='whatsapp'?'wa':S.azChannel==='sms'?'sms':'qr';
+  renderAll();
+}
+
+function finishPayment(){
+  S.modal=null;
+  S.posState='pos-success';
+  if(S.payMethod==='aplazo'){
+    S.phonePage='done';
+  }
+  renderAll();
+}
+
+function checkStatus(){
+  S.waitingStatus='pending';
+  S.showResend=false;
+  renderPOS();
+}
+function resendLink(){
+  S.showResend=true;
+  S.waitingStatus=null;
+  renderPOS();
+}
+function doResend(){
+  S.phonePage=S.azChannel==='whatsapp'?'wa':S.azChannel==='sms'?'sms':'qr';
+  S.showResend=false;
+  S.waitingStatus=null;
+  renderAll();
+}
+function cancelOrder(){S.cart={};S.posState='catalog';S.phonePage='idle';S.modal=null;renderAll();}
+function newOrder(){S.cart={};S.posState='catalog';S.phonePage='idle';S.modal=null;renderAll();}
+
+// ════════════════════════════════════════
+// PHONE
+// ════════════════════════════════════════
+function renderPhone(){
+  var stage=document.getElementById('phone-stage');
+  var lbl=document.getElementById('ph-lbl');
+  if(S.phonePage==='idle'){
+    stage.innerHTML='<div class="ph-idle"><div class="ph-idle-icon">📱</div><div style="font-size:13px;font-weight:700;color:var(--t2)">Esperando...</div><div style="font-size:11px;font-weight:600;margin-top:4px;line-height:1.5">Aqui aparecera la experiencia del cliente cuando el cajero envie el link de pago.</div></div>';
+    lbl.textContent='';
+    return;
+  }
+  var isAplazo=S.phonePage==='az-login'||S.phonePage==='az-otp'||S.phonePage==='checkout';
+  var url=isAplazo?'🔒 checkout.aplazo.com':S.phonePage==='done'?'checkout.aplazo.com':'';
+  var content='';
+  if(S.phonePage==='wa') content=buildWA();
+  else if(S.phonePage==='sms') content=buildSMS();
+  else if(S.phonePage==='qr') content=buildQRPh();
+  else if(S.phonePage==='az-login') content=buildAzLogin();
+  else if(S.phonePage==='az-otp') content=buildAzOtp();
+  else if(S.phonePage==='checkout') content=buildCkMobile();
+  else if(S.phonePage==='done') content=buildPhDone();
+  lbl.textContent=isAplazo?'Aplazo':'';
+  stage.innerHTML='<div class="ph-frame">'+
+  '<div class="ph-notch"><div class="ph-pill"></div></div>'+
+  '<div class="ph-url"><span>'+url+'</span></div>'+
+  '<div class="ph-body" id="ph-content">'+content+'</div>'+
+  '</div>';
+}
+
+function buildWA(){
+  var v=V[S.vert];
+  var total=cartTotal();
+  return '<div class="wa-bg">'+
+  '<div class="wa-hdr"><div class="wa-av">A</div><div><div class="wa-nm">Aplazo SA de CV ✓</div><div class="wa-st">verificado</div></div></div>'+
+  '<div class="wa-body">'+
+  '<div class="wa-bubble"><div class="wa-from">Aplazo</div>'+
+  '<div class="wa-text">Confirmacion de pago a plazos en <b>'+v.name+'</b>. Total: <b>'+fmt(total)+'</b></div>'+
+  '<a class="wa-link" onclick="openLink()">&#128279; Abrir link de pago</a>'+
+  '<div class="wa-time">Ahora</div></div>'+
+  '</div>'+
+  '<div class="wa-bar"><div class="wa-inp">Mensaje</div><div class="wa-send">&#9658;</div></div>'+
+  '</div>';
+}
+function buildSMS(){
+  var v=V[S.vert];
+  var total=cartTotal();
+  return '<div class="sms-bg">'+
+  '<div class="sms-hdr"><div class="sms-nm">Aplazo SA de CV</div><div class="sms-st">Mensaje</div></div>'+
+  '<div class="sms-body">'+
+  '<div class="sms-bub">'+
+  '<div class="sms-text">Confirmacion de pago a plazos en <b>'+v.name+'</b>. Total: '+fmt(total)+'</div>'+
+  '<a class="sms-link" onclick="openLink()">&#128279; Abrir link de pago</a>'+
+  '<div class="sms-time">Ahora</div>'+
+  '</div></div></div>';
+}
+function buildQRPh(){
+  return '<div class="qr-ph">'+
+  '<div class="ck-logo" style="display:inline-flex;margin-bottom:14px"><span>aplazo</span></div>'+
+  '<div style="font-size:14px;font-weight:800;color:#111;margin-bottom:6px">Escanea el codigo</div>'+
+  '<div style="font-size:11px;color:#888;font-weight:600;margin-bottom:16px">Para continuar con tu pago</div>'+
+  buildQRsvg(130)+
+  '<button onclick="openLink()" style="margin-top:16px;padding:10px 24px;background:#111;color:#fff;border:none;border-radius:100px;font-size:13px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif">Ir al checkout</button>'+
+  '</div>';
+}
+function openLink(){
+  if(S.canal==='app'){S.phonePage='checkout';}
+  else{S.phonePage='az-login';}
+  renderPhone();
+}
+function buildAzLogin(){
+  var v=V[S.vert];
+  return '<div class="az-login-sm">'+
+  '<div class="ck-logo" style="display:inline-flex;margin-bottom:14px"><span>aplazo</span></div>'+
+  '<div style="font-size:17px;font-weight:800;color:#111;line-height:1.2;margin-bottom:5px">Continua con tu compra</div>'+
+  '<div style="font-size:11px;color:var(--t3);font-weight:600;margin-bottom:18px">Estas por pagar en <b style="color:#111">'+v.name+'</b></div>'+
+  '<div style="font-size:10px;font-weight:700;color:var(--t2);margin-bottom:5px">Numero celular</div>'+
+  '<div style="display:flex;gap:5px;margin-bottom:12px">'+
+  '<div style="display:flex;align-items:center;gap:4px;padding:8px 9px;border:1.5px solid var(--border);border-radius:9px;background:#f5f5f5;font-size:10px;font-weight:700;color:var(--t2);flex-shrink:0"><span>🇲🇽</span><span>(+52)</span></div>'+
+  '<div style="flex:1;padding:8px 10px;border:1.5px solid var(--border);border-radius:9px;font-size:12px;font-weight:600;color:var(--t1);background:#fff">55-1234-5678</div>'+
+  '</div>'+
+  '<button onclick="goOTP()" style="width:100%;padding:12px;background:#111;color:#fff;border:none;border-radius:100px;font-size:13px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif;margin-bottom:12px">Continuar</button>'+
+  '<div style="background:#f0fafa;border-radius:10px;padding:10px;border:1px solid rgba(0,194,199,.3)">'+
+  '<div style="font-size:11px;font-weight:700;color:#111;margin-bottom:2px">Conoce tus APLAZO puntos</div>'+
+  '<div style="font-size:10px;color:var(--t3);font-weight:600;line-height:1.5">Acepta los retos y empieza a ganar puntos. Cada punto = $1!</div>'+
+  '</div></div>';
+}
+function goOTP(){S.phonePage='az-otp';S.otpVal='';renderPhone();}
+function buildAzOtp(){
+  var digits=S.otpVal.split('');
+  var boxes='';
+  for(var i=0;i<6;i++){var v=digits[i]||'';boxes+='<div class="otp-box'+(v?' filled':'')+'">'+v+'</div>';}
+  var filling=S.otpVal.length>0&&S.otpVal.length<6;
+  return '<div style="display:flex;flex-direction:column;align-items:center;padding:20px 14px;background:#fff;min-height:100%">'+
+  '<div class="ck-logo" style="display:inline-flex;margin-bottom:16px"><span>aplazo</span></div>'+
+  '<div style="font-size:17px;font-weight:800;color:#111;margin-bottom:5px;text-align:center">Verifica tu telefono</div>'+
+  '<div style="font-size:11px;color:var(--t3);font-weight:600;text-align:center;margin-bottom:18px;line-height:1.5">Codigo enviado a<br><b style="color:#111">+52 55-1234-5678</b></div>'+
+  '<div class="otp-boxes">'+boxes+'</div>'+
+  '<div style="font-size:10px;color:var(--t3);font-weight:600;margin-bottom:16px">Reenviar en 26s</div>'+
+  (S.otpVal.length===0?'<button onclick="startOtp()" style="padding:11px 24px;background:#111;color:#fff;border:none;border-radius:100px;font-size:12px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif;margin-bottom:10px">Recibir codigo</button>':
+  filling?'<div style="font-size:11px;color:var(--t3);font-weight:600;display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:50%;border:2px solid var(--ck-teal);border-top-color:transparent;animation:spin .6s linear infinite"></div>Ingresando...</div>':'')+'<style>@keyframes spin{to{transform:rotate(360deg)}}</style>'+
+  '</div>';
+}
+function startOtp(){
+  S.otpVal='';renderPhone();
+  var d='123456';var i=0;
+  function next(){if(i<d.length){S.otpVal+=d[i];i++;renderPhone();if(i<d.length)setTimeout(next,200);else setTimeout(function(){S.phonePage='checkout';renderPhone();},400);}}
+  setTimeout(next,250);
+}
+
+function buildCkMobile(){
+  var monto=cartTotal();
+  var plans=getPlans(monto);
+  var p=plans[S.ckPlan];
+  var base=S.ckCB?monto-CB:monto;
+  var com=base*(p.n===3?0:p.n===5?COM5:COM8);
+  var iva=com*IVA;
+  var total=base+com+iva;
+  var tasa=p.n===3?'—':p.tasa.toFixed(2)+'%';
+  var opts='';
+  for(var i=0;i<plans.length;i++){
+    var q=plans[i];
+    var pop=i===1?'<span class="e2-pop">Popular</span>':'';
+    opts+='<div class="e2-opt'+(S.ckPlan===i?' sel':'')+'" onclick="setCkPlan('+i+')"><div class="e2-r"><div class="e2-rdot"></div></div><div style="flex:1"><div class="e2-name">'+fmt(q.pmt)+' x '+q.n+'</div><div class="e2-detail"><span>'+(q.n===3?'Sin com':'Com: '+fmt(q.com))+'</span><span>Tot: '+fmt(q.total)+'</span></div></div>'+pop+'</div>';
+  }
+  var cbChk=S.ckCB?'<svg width="10" height="8" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'';
+  var cbDisc=S.ckCB?'<div class="r-row disc"><span>Cashback</span><span>-'+fmt(CB)+'</span></div>':'';
+  var extraD='';
+  if(S.ckDates){for(var di=0;di<p.n-1;di++){extraD+='<div class="tl-line"></div><div class="tl-row"><div class="tl-dot-e"></div><span style="flex:1">'+DATES[di]+'</span><span>'+fmt(p.pmt)+'</span></div>';}}
+  var mpHtml=S.ckMp?'<div class="mp-card"><div class="mp-sel"></div><div class="mp-visa">VISA</div><div style="flex:1"><div style="font-size:12px;font-weight:700;color:#111">.... 6178</div><div style="font-size:10px;color:#aaa;font-weight:600">Los plazos se cobraran aqui</div></div><span style="font-size:11px;font-weight:600;color:#555;cursor:pointer">Cambiar</span></div>':'';
+  return '<div class="ck-wrap"><div class="ck-bar"><div style="width:24px"></div><div class="ck-logo"><span>aplazo</span></div><div style="display:flex;gap:5px"><div class="ck-hd"><i class="bi bi-headphones"></i></div><button class="ck-x" onclick="S.phonePage=\'wa\';renderPhone()"><i class="bi bi-x"></i></button></div></div>'+
+  '<div class="ck-body"><div style="font-size:14px;font-weight:800;color:#111;margin-bottom:9px">Paga a tu ritmo</div>'+
+  '<div class="pc"><div class="pc-top"><div><div class="pc-sel">'+p.n+' plazos de: '+fmt(p.pmt)+'</div><div class="pc-first">Primer plazo de '+fmt(p.pmt)+'</div></div><button class="pc-hide">Ocultar</button></div>'+opts+'<div style="font-size:9px;color:#888;text-align:center;margin-top:5px">Tasa anual: '+tasa+'</div></div>'+
+  '<div class="cpn"><span>Tienes un cupon?</span><span class="cpn-link">Agregar</span></div>'+
+  '<div class="cb-row'+(S.ckCB?' on':'')+'" onclick="toggleCB()"><div style="display:flex;align-items:center;gap:7px"><div style="width:15px;height:15px;border-radius:3px;border:1.5px solid '+(S.ckCB?'var(--ck-teal)':'#bbb')+';background:'+(S.ckCB?'var(--ck-teal)':'#fff')+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+cbChk+'</div><span style="font-size:11px;font-weight:600;color:#111">Cashback APLAZO: '+fmt(CB)+'</span></div></div>'+
+  '<div style="margin-bottom:12px"><div style="font-size:15px;font-weight:800;color:#111;margin-bottom:8px">Resumen de pago</div>'+
+  '<div class="r-row"><span>Monto</span><span><b>'+fmt(monto)+'</b></span></div>'+cbDisc+
+  '<div class="r-row"><span>Comision</span><span>'+fmt(com)+'</span></div>'+
+  '<div class="r-row"><span>IVA</span><span>'+fmt(iva)+'</span></div>'+
+  '<div class="r-row total"><span>Total</span><span>'+fmt(total)+'</span></div></div>'+
+  '<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#111">Tus fechas</div><span style="font-size:11px;font-weight:700;color:var(--ck-teal);cursor:pointer" onclick="toggleDates()">'+( S.ckDates?'Ocultar':'Mostrar')+'</span></div>'+
+  '<div class="tl-hoy"><div class="tl-dot-f"></div><span style="flex:1">Hoy pagas</span><span>'+fmt(p.pmt)+'</span></div>'+extraD+'</div>'+
+  '<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px"><div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#111">Metodo de pago</div><span style="font-size:11px;font-weight:700;color:var(--ck-teal);cursor:pointer" onclick="toggleMp()">'+( S.ckMp?'Ocultar':'Mostrar')+'</span></div>'+mpHtml+'</div>'+
+  '<button class="ck-cta" onclick="completePay()">Confirmar compra</button>'+
+  '</div></div>';
+}
+
+function buildPhDone(){
+  return '<div class="ph-done">'+
+  '<div class="ph-done-circle" style="font-size:28px;display:flex;align-items:center;justify-content:center">&#10003;</div>'+
+  '<div style="font-size:17px;font-weight:800;color:#111;line-height:1.3;margin-bottom:8px;text-align:center">Tu compra ha sido<br>realizada con exito</div>'+
+  '<div style="font-size:12px;color:#888;font-weight:600;line-height:1.6;max-width:200px;margin-bottom:18px;text-align:center">En breve recibiras un correo con el detalle de tu compra.</div>'+
+  '<button style="padding:12px 28px;background:#111;color:#fff;border:none;border-radius:100px;font-size:13px;font-weight:800;cursor:pointer;font-family:Manrope,sans-serif">Cerrar</button>'+
+  '</div>';
+}
+
+function completePay(){
+  S.phonePage='done';
+  S.posState='pos-success';
+  renderAll();
+}
+function setCkPlan(i){S.ckPlan=i;renderPhone();}
+function toggleCB(){S.ckCB=!S.ckCB;renderPhone();}
+function toggleDates(){S.ckDates=!S.ckDates;renderPhone();}
+function toggleMp(){S.ckMp=!S.ckMp;renderPhone();}
+</script>
+</body>
+</html>

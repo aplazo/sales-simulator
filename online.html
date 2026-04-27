@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplazo · Sales Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+:root{
+  --cyan:#4AC9E3;--teal:#214345;--foam:#D6F5FA;
+  --n100:#EBEDF0;--n200:#D8DCE0;--n300:#C4CAD0;
+  --bg:#F2F4F6;--border:#E2E5E8;
+  --t1:#060606;--t2:#2E343A;--t3:#7F8D98;
+  --green:#5AAD12;--green-l:#EAF7D5;--red:#D41413;
+  --sh-sm:0 1px 4px rgba(0,0,0,.08);
+  --sh-md:0 4px 16px rgba(0,0,0,.10),0 2px 6px rgba(0,0,0,.06);
+  --sh-xl:0 24px 64px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.08);
+  --ck-teal:#00C2C7;
+  /* vertical accent — overridden per vertical */
+  --va:#111;--va-l:#f5f5f5;--va-btn:#111;--va-btn-t:#fff;--va-acc:#111;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a2e;color:var(--t1)}
+
+/* ── vertical themes ── */
+.v-moda{--va:#111;--va-l:#f5f5f5;--va-btn:#111;--va-btn-t:#fff;--va-acc:#111}
+.v-super{--va:#E87722;--va-l:#FFF3E8;--va-btn:#E87722;--va-btn-t:#fff;--va-acc:#E87722}
+.v-entret{--va:#1A3C6E;--va-l:#E8EFF8;--va-btn:#2D6BE4;--va-btn-t:#fff;--va-acc:#2D6BE4}
+.v-viajes{--va:#C0392B;--va-l:#FDEAEA;--va-btn:#C0392B;--va-btn-t:#fff;--va-acc:#C0392B}
+
+/* ════════════ SETUP ════════════ */
+#setup{position:fixed;inset:0;background:linear-gradient(135deg,#0d1b2a,#214345);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px}
+.sc{background:#fff;border-radius:28px;padding:40px 44px;width:100%;max-width:620px;box-shadow:0 40px 100px rgba(0,0,0,.4)}
+.sc-logo{display:inline-flex;align-items:center;background:var(--cyan);border-radius:100px;padding:7px 18px;margin-bottom:28px}
+.sc-logo span{font-weight:800;font-size:16px;color:var(--teal);font-family:'Manrope',sans-serif}
+.sc h1{font-size:26px;font-weight:800;color:var(--t1);margin-bottom:6px}
+.sc p{font-size:14px;color:var(--t3);font-weight:600;margin-bottom:32px;line-height:1.6}
+.sc-step{margin-bottom:24px}
+.sc-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sc-lbl .sn{width:20px;height:20px;border-radius:50%;background:var(--teal);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.so{border:2px solid var(--border);border-radius:16px;padding:14px 12px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;opacity:.45;pointer-events:none}
+.so.on{opacity:1;pointer-events:all}
+.so:hover{border-color:var(--cyan);background:var(--foam)}
+.so.sel{border-color:var(--teal);background:rgba(33,67,69,.05)}
+.so .oi{font-size:28px;margin-bottom:6px;display:block}
+.so .on2{font-size:12px;font-weight:700;color:var(--t2);line-height:1.3}
+.so .os{font-size:10px;color:var(--t3);font-weight:600;margin-top:2px}
+.so.sel .on2{color:var(--teal)}
+.sc-cta{width:100%;padding:15px;background:var(--teal);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sc-cta:hover{background:#173032}
+.sc-cta:disabled{opacity:.3;cursor:not-allowed}
+
+/* ════════════ APP SHELL ════════════ */
+#app{display:none;height:100vh;flex-direction:column;background:#1a1a2e}
+#app.show{display:flex}
+.tb{height:52px;background:var(--teal);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.tb-logo{background:var(--cyan);border-radius:100px;padding:5px 14px;display:flex;align-items:center;gap:6px}
+.tb-logo span{font-weight:800;font-size:14px;color:var(--teal);font-family:'Manrope',sans-serif}
+.tb-sep{font-size:11px;color:rgba(255,255,255,.35);font-weight:600}
+.tb-pill{background:rgba(255,255,255,.1);border-radius:100px;padding:4px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:6px}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan)}
+.tb-btn{margin-left:auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:6px 14px;font-size:11px;font-weight:700;color:rgba(255,255,255,.8);cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s}
+.tb-btn:hover{background:rgba(255,255,255,.2)}
+.pbar{height:3px;background:rgba(255,255,255,.1);flex-shrink:0}
+.pfill{height:100%;background:var(--cyan);transition:width .5s ease;border-radius:0 2px 2px 0}
+
+/* ════════════ STAGE ════════════ */
+.stage{flex:1;display:flex;align-items:stretch;justify-content:stretch;overflow:hidden;padding:0;position:relative}
+#fw{display:flex;flex:1;align-items:stretch;justify-content:stretch;min-width:0;min-height:0}
+.step-overlay{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.65);backdrop-filter:blur(8px);border-radius:100px;padding:7px 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);white-space:nowrap;pointer-events:none;display:flex;align-items:center;gap:7px}
+.step-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan)}
+
+/* ── Desktop frame ── */
+.df{flex:1;background:#fff;border-radius:0;overflow:hidden;box-shadow:none;display:flex;flex-direction:column;min-width:0;min-height:0}
+.df-chrome{height:36px;background:#1c1c1c;display:flex;align-items:center;padding:0 12px;gap:7px;flex-shrink:0}
+.df-dot{width:11px;height:11px;border-radius:50%}
+.df-url{flex:1;background:#2a2a2a;border-radius:5px;height:19px;margin:0 10px;display:flex;align-items:center;padding:0 8px}
+.df-url span{font-size:9px;color:#777;font-family:'Manrope',sans-serif}
+.df-body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#ddd transparent}
+
+/* ── Phone frame ── */
+.pf-wrap{display:flex;align-items:center;justify-content:center;flex:1;background:#1a1a2e;padding:12px}
+.pf{width:375px;height:calc(100vh - 90px);max-height:720px;background:#fff;border-radius:28px;overflow:hidden;box-shadow:var(--sh-xl),0 0 0 6px rgba(0,0,0,.3),0 0 0 8px rgba(255,255,255,.04);display:flex;flex-direction:column;flex-shrink:0}
+.pf-notch{height:22px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pf-pill{width:70px;height:4px;background:#222;border-radius:10px}
+.pf-url{height:30px;background:#f7f7f7;display:flex;align-items:center;padding:0 12px;flex-shrink:0;border-bottom:1px solid #eee}
+.pf-url span{font-size:10px;color:#888;font-family:'Manrope',sans-serif;flex:1;text-align:center}
+.pf-body{overflow-y:auto;flex:1;scrollbar-width:none}
+.pf-body::-webkit-scrollbar{display:none}
+
+/* ════════════ SHARED STORE CHROME ════════════ */
+.snav{height:52px;display:flex;align-items:center;padding:0 18px;gap:14px;border-bottom:1px solid #eee;flex-shrink:0;background:#fff;position:sticky;top:0;z-index:20}
+.snav-logo{font-size:17px;font-weight:800;color:var(--va-acc)}
+.snav-tag{font-size:10px;color:var(--t3);font-weight:600}
+.snav-flex{flex:1}
+.snav-cart{position:relative;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:15px;transition:all .15s}
+.snav-cart:hover{border-color:var(--va-acc);color:var(--va-acc)}
+.cart-badge{position:absolute;top:-5px;right:-5px;background:var(--va-btn);color:var(--va-btn-t);border-radius:50%;font-size:9px;font-weight:800;width:17px;height:17px;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+
+/* ════════════ MODA ════════════ */
+.m-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#eee}
+.m-card{background:#fff;cursor:pointer;transition:opacity .15s;padding:14px 12px;display:flex;flex-direction:column;gap:8px;position:relative}
+.m-card:hover{opacity:.85}
+.m-tag{display:inline-block;background:#111;color:#fff;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:2px 8px;border-radius:100px;align-self:flex-start}
+.m-img{height:150px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:54px;border-radius:8px}
+.m-brand{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3)}
+.m-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3}
+.m-price{font-size:14px;font-weight:800;color:var(--t1)}
+.m-sub{font-size:10px;font-weight:600;color:var(--t3);margin-top:1px}
+/* PDP */
+.m-pdp-img{height:240px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:80px}
+.m-pdp-body{padding:16px 18px 28px}
+.m-pdp-badge{display:inline-block;background:#111;color:#fff;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:100px;margin-bottom:10px}
+.m-pdp-brand{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:6px}
+.m-pdp-name{font-size:20px;font-weight:800;color:var(--t1);line-height:1.2;margin-bottom:10px}
+.m-pdp-price{font-size:24px;font-weight:800;color:#e00;margin-bottom:8px}
+.m-aplazo-row{display:flex;align-items:center;gap:6px;margin:10px 0;font-size:12px;font-weight:600;color:var(--t2);flex-wrap:wrap}
+.az-chip{background:var(--cyan);border-radius:100px;padding:3px 10px;font-size:11px;font-weight:800;color:var(--teal);font-family:'Manrope',sans-serif;white-space:nowrap}
+.m-sizes{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.m-sz{width:44px;height:36px;border:1.5px solid #ddd;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--t2)}
+.m-sz:hover,.m-sz.sel{border-color:#111;background:#111;color:#fff}
+.m-atc{display:block;width:100%;padding:14px;background:var(--va-btn);color:var(--va-btn-t);border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:8px}
+.m-atc:hover{opacity:.88}
+.m-desc{background:var(--n100);border-radius:12px;padding:12px;font-size:12px;font-weight:600;color:var(--t2);line-height:1.7;margin-top:12px}
+
+/* ════════════ SUPER ════════════ */
+.su-cats{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #eee;flex-shrink:0}
+.su-cats::-webkit-scrollbar{display:none}
+.su-cat{background:var(--n100);border-radius:100px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--t2);white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0}
+.su-cat.sel{background:var(--va-btn);color:#fff}
+.su-list{padding:10px 12px 20px}
+.su-card{display:flex;align-items:center;gap:12px;padding:11px 12px;background:#fff;border-radius:12px;margin-bottom:8px;border:1.5px solid #eee;cursor:pointer;transition:all .15s}
+.su-card:hover{border-color:var(--va-acc)}
+.su-img{width:60px;height:60px;background:#f8f8f8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.su-info{flex:1;min-width:0}
+.su-name{font-size:13px;font-weight:700;color:var(--t1);line-height:1.3}
+.su-sub{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px}
+.su-prices{display:flex;align-items:baseline;gap:6px;margin-top:3px}
+.su-price{font-size:14px;font-weight:800;color:var(--t1)}
+.su-old{font-size:11px;color:var(--t3);font-weight:600;text-decoration:line-through}
+.su-add{width:32px;height:32px;border-radius:50%;background:var(--va-btn);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:all .15s;margin-left:auto}
+.su-add.added{background:var(--green)}
+/* PDP */
+.su-pdp-img{height:200px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:72px}
+.su-pdp-body{padding:16px 18px 28px}
+.su-pdp-brand{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--va-acc);margin-bottom:4px}
+.su-pdp-name{font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px;line-height:1.3}
+.su-pdp-sub{font-size:12px;color:var(--t3);font-weight:600;margin-bottom:12px}
+.su-pdp-prices{display:flex;align-items:baseline;gap:8px;margin-bottom:16px}
+.su-pdp-price{font-size:26px;font-weight:800;color:var(--t1)}
+.su-pdp-old{font-size:14px;color:var(--t3);text-decoration:line-through;font-weight:600}
+.su-atc{display:block;width:100%;padding:13px;background:var(--va-btn);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+
+/* ════════════ ENTRET ════════════ */
+.en-nav{background:var(--va);padding:0 18px;height:50px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:20}
+.en-nav-logo{font-size:18px;font-weight:800;color:#fff}
+.en-nav-links{display:flex;gap:18px}
+.en-nav-lnk{font-size:12px;font-weight:600;color:rgba(255,255,255,.65);cursor:pointer}
+.en-nav-lnk.sel{color:#fff}
+.en-tabs{display:flex;border-bottom:2px solid #eee;padding:0 18px;background:#fff}
+.en-tab{padding:11px 18px;font-size:13px;font-weight:700;color:var(--t3);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.en-tab.sel{color:var(--va-acc);border-bottom-color:var(--va-acc)}
+.en-dates{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #eee}
+.en-dates::-webkit-scrollbar{display:none}
+.en-date{padding:6px 13px;border-radius:100px;font-size:11px;font-weight:700;color:var(--t2);cursor:pointer;background:var(--n100);white-space:nowrap;flex-shrink:0;transition:all .15s}
+.en-date.sel{background:var(--va-acc);color:#fff}
+.en-movies{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
+.en-movie{cursor:pointer;border-radius:12px;overflow:hidden;transition:transform .15s}
+.en-movie:hover{transform:scale(1.02)}
+.en-poster{height:155px;display:flex;align-items:center;justify-content:center;font-size:50px;position:relative}
+.en-rating{position:absolute;top:7px;left:7px;border-radius:4px;font-size:10px;font-weight:800;padding:2px 7px;color:#fff}
+.en-movie-info{padding:8px 10px 10px;background:#fff}
+.en-movie-ttl{font-size:12px;font-weight:700;color:var(--t1);line-height:1.3}
+.en-movie-meta{font-size:10px;color:var(--t3);font-weight:600;margin-top:3px}
+/* Showtime */
+.en-banner{height:115px;display:flex;align-items:center;padding:0 18px;gap:14px;overflow:hidden}
+.en-steps{display:flex;align-items:center;padding:8px 18px;background:#fff;border-bottom:1px solid #eee}
+.en-st{flex:1;font-size:10px;font-weight:800;text-align:center;color:var(--t3);position:relative}
+.en-st::after{content:'›';position:absolute;right:-4px;top:50%;transform:translateY(-50%);color:var(--n300);font-size:13px}
+.en-st:last-child::after{display:none}
+.en-st.cur{color:var(--va-acc)}
+.en-st.done{color:var(--green)}
+.en-showtimes{padding:12px 16px}
+.en-st-day{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:8px}
+.en-times{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.en-time{padding:8px 15px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer;transition:all .15s}
+.en-time:hover{border-color:var(--va-acc);color:var(--va-acc)}
+.en-time.sel{background:var(--va-acc);border-color:var(--va-acc);color:#fff}
+/* Seats */
+.en-screen{background:#999;color:#fff;text-align:center;font-size:10px;font-weight:700;padding:5px;letter-spacing:2px;margin:10px 14px 14px;border-radius:4px}
+.en-seat-legend{display:flex;justify-content:center;gap:14px;margin-bottom:12px;font-size:10px;font-weight:600;color:var(--t2)}
+.en-seat-legend span{display:flex;align-items:center;gap:4px}
+.en-seat-map{padding:0 8px 16px;overflow-x:auto}
+.en-row{display:flex;align-items:center;gap:4px;margin-bottom:4px;justify-content:center}
+.en-row-lbl{width:18px;font-size:10px;font-weight:800;color:var(--t3);text-align:center;flex-shrink:0}
+.en-seat{width:21px;height:19px;border-radius:3px 3px 2px 2px;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:1.5px solid transparent;flex-shrink:0}
+.en-seat.free{background:#e8ecf0;color:#aaa;border-color:#ddd}
+.en-seat.free:hover{background:var(--va-acc);color:#fff;border-color:var(--va-acc)}
+.en-seat.taken{background:#e0e0e0;color:#bbb;cursor:not-allowed;opacity:.5}
+.en-seat.sel{background:var(--va-acc);color:#fff;border-color:var(--va-acc)}
+.en-seat.gap{background:transparent;border:none;cursor:default;pointer-events:none}
+/* En checkout */
+.en-ck-sec{padding:14px 18px;border-bottom:1px solid #eee}
+.en-ck-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px}
+.en-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:600;color:var(--t1);background:#fff;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:8px}
+.en-inp:focus{border-color:var(--va-acc)}
+
+/* ════════════ VIAJES ════════════ */
+.vj-hdr{background:var(--va);padding-bottom:14px}
+.vj-logo-bar{height:44px;display:flex;align-items:center;padding:0 18px}
+.vj-logo{font-size:16px;font-weight:800;color:#fff}
+.vj-search{background:#fff;border-radius:12px;margin:0 14px;padding:13px;box-shadow:var(--sh-md)}
+.vj-sr{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.vj-city{flex:1;min-width:0}
+.vj-city-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3)}
+.vj-city-val{font-size:14px;font-weight:800;color:var(--t1)}
+.vj-sw{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:var(--t3);cursor:pointer}
+.vj-info-row{display:flex;gap:8px}
+.vj-if{flex:1;background:var(--n100);border-radius:8px;padding:7px 10px}
+.vj-if-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.vj-if-val{font-size:12px;font-weight:700;color:var(--t1)}
+.vj-bus-btn{width:100%;padding:12px;background:var(--va-btn);color:#fff;border:none;border-radius:100px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;margin-top:10px}
+/* Schedules */
+.vj-trip{border:1.5px solid var(--border);border-radius:12px;padding:13px;margin-bottom:10px;cursor:pointer;background:#fff;transition:all .15s;position:relative}
+.vj-trip:hover{border-color:var(--va-acc);box-shadow:var(--sh-sm)}
+.vj-trip.sel{border-color:var(--va-acc)}
+.vj-trip-tag{position:absolute;top:-1px;left:12px;background:linear-gradient(90deg,#6C63FF,#2D6BE4);color:#fff;font-size:9px;font-weight:800;padding:3px 10px;border-radius:0 0 8px 8px}
+.vj-times{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.vj-time{font-size:18px;font-weight:800;color:var(--t1)}
+.vj-arrow{font-size:12px;color:var(--t3);flex:1;text-align:center}
+.vj-dur{font-size:10px;font-weight:600;color:var(--t3)}
+.vj-tm{display:flex;align-items:center;justify-content:space-between}
+.vj-seats-lbl{font-size:11px;color:var(--t3);font-weight:600}
+.vj-trip-price{font-size:16px;font-weight:800;color:var(--t1)}
+/* Bus seats */
+.vj-seat{width:34px;height:29px;border-radius:5px 5px 3px 3px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;border:1.5px solid transparent}
+.vj-seat.free{background:#e8ecf0;color:#888;border-color:#ddd}
+.vj-seat.free:hover{background:var(--va-btn);color:#fff;border-color:var(--va-btn)}
+.vj-seat.taken{background:#e0e0e0;color:#ccc;cursor:not-allowed;opacity:.5}
+.vj-seat.sel{background:var(--va-btn);color:#fff;border-color:var(--va-btn)}
+
+/* ════════════ SHARED CART + CHECKOUT ════════════ */
+.cart-pg{padding:14px 16px 24px}
+.cart-back-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.cart-back{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);font-size:14px;transition:all .15s}
+.cart-back:hover{border-color:var(--va-acc);color:var(--va-acc)}
+.cart-ttl{font-size:17px;font-weight:800;color:var(--t1)}
+.ci{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.ci-img{width:48px;height:48px;border-radius:10px;background:var(--n100);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:12.5px;font-weight:700;color:var(--t1);line-height:1.3}
+.ci-price{font-size:13px;font-weight:800;color:var(--t1);margin-top:3px}
+.ci-rm{width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:11px;flex-shrink:0}
+.ci-rm:hover{border-color:var(--red);color:var(--red)}
+.cart-sum{background:var(--n100);border-radius:12px;padding:13px;margin-top:13px}
+.cs-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t3);padding:3px 0}
+.cs-row.total{font-size:15px;font-weight:800;color:var(--t1);border-top:1px solid var(--border);margin-top:6px;padding-top:8px}
+.cart-cta{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px;font-family:'Plus Jakarta Sans',sans-serif;background:var(--va-btn);color:var(--va-btn-t);transition:all .15s;text-align:center}
+/* Merchant checkout */
+.mck{padding:14px 18px 28px}
+.mck-ttl{font-size:17px;font-weight:800;color:var(--t1);margin-bottom:14px}
+.mck-order{background:var(--n100);border-radius:12px;padding:13px;margin-bottom:15px}
+.mck-oi{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:3px 0}
+.mck-oi.total{font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid var(--border);margin-top:6px;padding-top:8px}
+.mck-sec-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:9px}
+.mck-inp{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:600;color:var(--t1);background:#fff;font-family:'Plus Jakarta Sans',sans-serif;outline:none;margin-bottom:8px}
+.mck-inp:focus{border-color:var(--va-acc)}
+.mck-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* Payment options — shared */
+.pay-opt{display:flex;align-items:center;gap:11px;padding:12px 13px;border:2px solid var(--border);border-radius:14px;cursor:pointer;transition:all .15s;background:#fff;margin-bottom:8px}
+.pay-opt:hover{border-color:var(--n300)}
+.pay-opt.sel{border-color:var(--va-acc)}
+.pay-opt.dis{cursor:not-allowed;opacity:.55}
+.pay-opt.dis:hover{border-color:var(--border)}
+.pay-radio{width:18px;height:18px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;position:relative;transition:all .15s}
+.pay-opt.sel .pay-radio{border-color:var(--va-acc)}
+.pay-opt.sel .pay-radio::after{content:'';position:absolute;width:8px;height:8px;border-radius:50%;background:var(--va-acc);top:50%;left:50%;transform:translate(-50%,-50%)}
+.pay-name{font-size:13px;font-weight:700;color:var(--t1)}
+.pay-sub{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px}
+.pay-dis-lbl{font-size:11px;color:var(--t3);font-weight:600;margin-top:2px;font-style:italic}
+.mck-cta{display:block;width:100%;padding:14px;border-radius:100px;border:none;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;background:var(--va-btn);color:var(--va-btn-t);transition:all .15s;text-align:center;margin-top:14px}
+/* aplazo chip */
+.az-logo{background:var(--cyan);border-radius:100px;padding:3px 10px;display:inline-flex;align-items:center;gap:4px}
+.az-logo span{font-weight:800;font-size:12px;color:var(--teal);font-family:'Manrope',sans-serif}
+
+/* ════════════ APLAZO CHECKOUT ════════════ */
+.ck-wrap{background:#fff;min-height:100%;font-family:'Manrope',sans-serif}
+.ck-bar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 10px;border-bottom:2.5px solid var(--ck-teal);position:sticky;top:0;background:#fff;z-index:20}
+.ck-logo{background:var(--cyan);border-radius:100px;padding:5px 13px;display:inline-flex;align-items:center;gap:5px}
+.ck-logo span{font-weight:800;font-size:13px;color:#060606}
+.ck-hd{width:30px;height:30px;border-radius:50%;border:1.5px solid #e0e0e0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#888;font-size:14px}
+.ck-x{width:28px;height:28px;border-radius:50%;background:#f2f2f2;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#777;font-size:13px;flex-shrink:0}
+.ck-body{padding:14px 18px 28px}
+/* plan card */
+.pc{background:#f0fafa;border:2px solid var(--ck-teal);border-radius:16px;padding:13px;margin-bottom:13px}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.pc-sel{font-size:15px;font-weight:800;color:#111}
+.pc-first{font-size:11px;color:#888;font-weight:600;margin-top:2px}
+.pc-hide{background:#fff;border:1.5px solid #ddd;border-radius:100px;font-size:11px;font-weight:700;padding:4px 12px;cursor:pointer;color:#555}
+.e2-opt{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1.5px solid #e0e0e0;background:#fff;cursor:pointer;margin-bottom:7px;user-select:none;position:relative;transition:border-color .15s}
+.e2-opt:hover{border-color:#bbb}
+.e2-opt.sel{border-color:#111}
+.e2-r{width:18px;height:18px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;position:relative;transition:all .15s}
+.e2-opt.sel .e2-r{border-color:#111;background:#111}
+.e2-rdot{width:7px;height:7px;border-radius:50%;background:#fff;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none}
+.e2-opt.sel .e2-rdot{display:block}
+.e2-name{font-size:13px;font-weight:700;color:#111}
+.e2-detail{font-size:11px;color:#888;font-weight:600;display:flex;justify-content:space-between;margin-top:2px}
+.e2-pop{position:absolute;top:8px;right:10px;font-size:9px;font-weight:700;background:#e8e8e8;color:#555;padding:2px 7px;border-radius:100px}
+/* summary rows */
+.r-row{display:flex;justify-content:space-between;font-size:14px;font-weight:600;padding:4px 0;color:#555}
+.r-row b{color:#111;font-weight:800}
+.r-row.total{font-size:16px;font-weight:800;color:#111;border-top:1px solid #eee;margin-top:8px;padding-top:10px}
+.r-row.disc{color:#22863a;font-weight:700}
+/* timeline */
+.tl-hoy{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:14px;font-weight:800;color:#111;background:var(--ck-teal);border-radius:10px;margin-bottom:2px}
+.tl-dot-f{width:13px;height:13px;border-radius:50%;background:#111;flex-shrink:0}
+.tl-line{width:1.5px;height:16px;background:#e0e0e0;margin-left:5.5px}
+.tl-row{display:flex;align-items:center;gap:10px;padding:3.5px 0;font-size:13px;font-weight:600;color:#555}
+.tl-dot-e{width:13px;height:13px;border-radius:50%;border:1.5px solid #ccc;background:#fff;flex-shrink:0}
+/* method card */
+.mp-card{display:flex;align-items:center;gap:12px;padding:12px 13px;border:1.5px solid #e0e0e0;border-radius:14px}
+.mp-sel{width:21px;height:21px;border-radius:50%;border:2px solid #111;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mp-sel::after{content:'';width:9px;height:9px;border-radius:50%;background:#111;display:block}
+.mp-visa{width:40px;height:26px;background:#1a1a5e;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800}
+/* cashback */
+.cb-row{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border:1.5px solid #e0e0e0;border-radius:14px;margin:8px 0 13px;cursor:pointer;user-select:none;transition:all .15s}
+.cb-row.on{border-color:var(--ck-teal);background:#f0fafa}
+/* coupon */
+.cpn{display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:13px;font-weight:600;color:#888;border-top:1px solid #f0f0f0}
+.cpn-link{color:#111;font-weight:700;text-decoration:underline;cursor:pointer}
+/* cta */
+.ck-cta{display:block;width:100%;padding:15px;background:#111;color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;text-align:center;cursor:pointer;font-family:'Manrope',sans-serif;margin-top:4px;transition:all .15s}
+.ck-cta:hover{background:#333}
+/* success inside aplazo */
+.ck-ok{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:44px 22px;text-align:center;min-height:100%}
+.ck-ok-circle{width:70px;height:70px;border-radius:50%;background:#f0fffe;border:3px solid var(--ck-teal);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.ck-ok-ttl{font-size:22px;font-weight:800;color:#111;margin-bottom:8px}
+.ck-ok-sub{font-size:13px;color:#888;font-weight:600;line-height:1.6;max-width:250px;margin-bottom:18px}
+.ck-ok-card{background:#f0fffe;border:1.5px solid var(--ck-teal);border-radius:14px;padding:14px;width:100%;max-width:290px;text-align:left}
+.ck-ok-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#666;padding:4px 0;border-bottom:1px solid #e8f8f8}
+.ck-ok-row:last-child{border-bottom:none;font-size:14px;font-weight:800;color:#111}
+/* web 2-col */
+.ck-web-bg{background:#f0f2f5;min-height:100%;padding:18px;display:flex;justify-content:center;align-items:flex-start}
+.ck-web-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--sh-md);width:100%;max-width:540px}
+.ck-web-bar{display:flex;align-items:center;justify-content:space-between;padding:13px 22px 11px;border-bottom:2.5px solid var(--ck-teal);background:#fff}
+.ck-web-body{padding:18px 22px 26px}
+.ck-2col{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.ck-col-ttl{font-size:15px;font-weight:800;color:#111;margin-bottom:12px}
+
+/* ════════════ MERCHANT SUCCESS ════════════ */
+.ms-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 22px;text-align:center;min-height:80%}
+.ms-icon{width:70px;height:70px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:18px;animation:pop .4s cubic-bezier(.34,1.56,.64,1)}
+.ms-ttl{font-size:22px;font-weight:800;color:var(--t1);margin-bottom:8px}
+.ms-sub{font-size:14px;color:var(--t3);font-weight:600;line-height:1.6;max-width:300px;margin-bottom:22px}
+.ms-card{background:#fff;border:1.5px solid var(--border);border-radius:18px;padding:18px;width:100%;max-width:340px;text-align:left;box-shadow:var(--sh-sm)}
+.ms-card-row{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:4px 0;border-bottom:1px solid var(--n100)}
+.ms-card-row:last-child{border-bottom:none}
+.ms-card-row.total{font-size:14px;font-weight:800;color:var(--t1)}
+
+/* ════════════ MISC ════════════ */
+.back-row{display:flex;align-items:center;gap:8px;padding:10px 16px 0;cursor:pointer}
+.back-row i{font-size:13px;color:var(--t3)}
+.back-row span{font-size:12px;font-weight:600;color:var(--t3)}
+.sticky-cart-btn{padding:0 14px 14px;position:sticky;bottom:0;background:linear-gradient(transparent,#fff 60%)}
+.outline-btn{padding:11px 26px;border-radius:100px;border:2px solid var(--border);background:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;color:var(--t2);transition:all .15s}
+.outline-btn:hover{border-color:var(--t2)}
+.teal-outline-btn{padding:11px 26px;border-radius:100px;border:2px solid var(--ck-teal);background:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Manrope',sans-serif;color:#214345;transition:all .15s;margin-top:10px}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="setup">
+  <div class="sc">
+    <div class="sc-logo"><span>aplazo</span></div>
+    <h1>Sales Simulator</h1>
+    <p>Simula el proceso de compra completo para demostraciones con clientes.</p>
+    <div class="sc-step">
+      <div class="sc-lbl"><span class="sn">1</span> Giro del comercio</div>
+      <div class="g4">
+        <div class="so on" data-v="moda" onclick="pickV(this)"><span class="oi">👟</span><div class="on2">Moda &amp; Zapatos</div><div class="os">Ropa, calzado</div></div>
+        <div class="so on" data-v="super" onclick="pickV(this)"><span class="oi">🛒</span><div class="on2">Supermercado</div><div class="os">Abarrotes, frutas</div></div>
+        <div class="so on" data-v="entret" onclick="pickV(this)"><span class="oi">🎬</span><div class="on2">Entretenimiento</div><div class="os">Cine, eventos</div></div>
+        <div class="so on" data-v="viajes" onclick="pickV(this)"><span class="oi">🚌</span><div class="on2">Viajes</div><div class="os">Autobús, vuelos</div></div>
+      </div>
+    </div>
+    <div class="sc-step" id="step2">
+      <div class="sc-lbl"><span class="sn">2</span> Canal de venta</div>
+      <div class="g2">
+        <div class="so" data-ch="desktop" onclick="pickCh(this)"><span class="oi">🖥️</span><div class="on2">Online — Desktop</div><div class="os">Computadora</div></div>
+        <div class="so" data-ch="mobile" onclick="pickCh(this)"><span class="oi">📱</span><div class="on2">Online — Móvil</div><div class="os">Teléfono</div></div>
+      </div>
+    </div>
+    <button class="sc-cta" id="go-btn" disabled onclick="launch()"><i class="bi bi-play-fill"></i> Iniciar simulación</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="tb">
+    <div class="tb-logo"><span>aplazo</span></div>
+    <span class="tb-sep">sales simulator</span>
+    <div class="tb-pill"><div class="tb-dot"></div><span id="tb-lbl">Demo</span></div>
+    <button class="tb-btn" onclick="restart()"><i class="bi bi-arrow-counterclockwise"></i> Reiniciar</button>
+  </div>
+  <div class="pbar"><div class="pfill" id="pfill" style="width:5%"></div></div>
+  <div class="stage">
+    <div id="fw"></div>
+    <div class="step-overlay"><div class="step-dot"></div><span id="step-txt">Inicio</span></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+var COM5=0.0499, COM8=0.0799, IVA=0.16, CB=80;
+var DATES=['26 Jun','10 Jul','24 Jul','8 Ago','22 Ago','5 Sep','19 Sep'];
+
+function fmt(n){
+  return '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function getPlans(m){
+  var c5=m*COM5, c8=m*COM8, i5=c5*IVA, i8=c8*IVA;
+  return [
+    {n:3, pmt:m/3,        com:0,  iva:0,  total:m,        tasa:0},
+    {n:5, pmt:(m+c5+i5)/5,com:c5, iva:i5, total:m+c5+i5,  tasa:COM5*12*100},
+    {n:8, pmt:(m+c8+i8)/8,com:c8, iva:i8, total:m+c8+i8,  tasa:COM8*12*100},
+  ];
+}
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+var V = {
+  moda:{
+    name:'Deportotal', tagline:'Todo para tu deporte', cls:'v-moda',
+    icon:'👟', url:'deportotal.com.mx',
+    sizes:['24.5','25','25.5','26','26.5','27','27.5','28'],
+    desc:'Calzado diseñado para trail running. Suela Traxion con agarre superior. Upper de malla resistente al desgaste.',
+    products:[
+      {id:1,e:'🎒',brand:'ADIDAS',  name:'Mochila Adidas Ess Btu Ka6767',          price:999,  tag:'Mas vendido'},
+      {id:2,e:'👟',brand:'ASICS',   name:'Tenis Asics Ahq Upcourt 6 Hombre',       price:1799, tag:'Nuevo'},
+      {id:3,e:'🩱',brand:'ADIDAS',  name:'Biker Adidas Adizero Hombre',            price:699},
+      {id:4,e:'🥾',brand:'ADIDAS',  name:'Tenis Adidas Terrex Anylander Hombre',   price:1599, tag:'Hot'},
+      {id:5,e:'👕',brand:'NIKE',    name:'Playera Nike Dri-FIT Training',          price:899},
+      {id:6,e:'🧤',brand:'UA',      name:'Guantes UA Weightlifting',               price:549},
+    ]
+  },
+  super:{
+    name:'FreshMart', tagline:'Cuestame menos', cls:'v-super',
+    icon:'🛒', url:'freshmart.com.mx',
+    cats:['Frutas y Verduras','Despensa','Lacteos','Bebidas','Limpieza'],
+    desc:'Producto fresco de primera calidad, seleccionado directamente de productores locales.',
+    products:[
+      {id:1,e:'🍅',brand:'FreshMart',name:'Tomate Saladet por kg',     price:55, old:62, sub:'Aprox 150g c/u'},
+      {id:2,e:'🍌',brand:'FreshMart',name:'Platano Chiapas por kg',    price:23,         sub:'Aprox 120g c/u'},
+      {id:3,e:'🥑',brand:'FreshMart',name:'Aguacate Hass por kg',      price:54,         sub:'Aprox 200g c/u'},
+      {id:4,e:'🧅',brand:'FreshMart',name:'Cebolla Blanca por kg',     price:30,         sub:'Aprox 400g c/u'},
+      {id:5,e:'🥕',brand:'FreshMart',name:'Zanahoria por kg',          price:19,         sub:'Aprox 150g c/u'},
+      {id:6,e:'🥦',brand:'FreshMart',name:'Brocoli pieza',             price:42, old:54, sub:'1 pieza aprox 500g'},
+      {id:7,e:'🍞',brand:'Bimbo',    name:'Pan Bimbo Blanco 620g',     price:43, old:54, sub:'1 pieza de 620g'},
+      {id:8,e:'🌾',brand:'Chedraui', name:'Arroz Super Extra 900g',    price:15, old:17, sub:'1 pieza de 900g'},
+      {id:9,e:'🍪',brand:'Marinela', name:'Galletas Barritas Fresa 268g',price:27,old:42,sub:'4 piezas de 268g'},
+    ]
+  },
+  entret:{
+    name:'CineMax', tagline:'', cls:'v-entret',
+    icon:'🎬', url:'cinemax.com.mx',
+    showtimes:['4:00 p.m.','5:00 p.m.','6:20 p.m.','7:15 p.m.','8:40 p.m.','9:30 p.m.'],
+    movies:[
+      {id:1,e:'🎤',ttl:'Michael: La Historia de Michael Jackson',rating:'A',  genre:'Drama, Biografica',    price:155,bg:'linear-gradient(135deg,#1a1a1a,#3d2b1f)',rc:'#4CAF50'},
+      {id:2,e:'🎮',ttl:'Super Mario Galaxy: La Pelicula',        rating:'A',  genre:'Animacion, Aventura',  price:162,bg:'linear-gradient(135deg,#0d2b6b,#3a7bd5)',rc:'#4CAF50'},
+      {id:3,e:'🌍',ttl:'Proyecto Fin del Mundo',                 rating:'B',  genre:'Ciencia Ficcion',      price:148,bg:'linear-gradient(135deg,#1a3a1a,#2d7a3d)',rc:'#2196F3'},
+      {id:4,e:'💀',ttl:'La Posesion de la Momia',                rating:'B15',genre:'Terror, Suspenso',     price:148,bg:'linear-gradient(135deg,#2a0a0a,#8b1a1a)',rc:'#FF9800'},
+      {id:5,e:'⚽',ttl:'La Familia del Barrio',                  rating:'C',  genre:'Comedia, Animacion',   price:162,bg:'linear-gradient(135deg,#1a4a1a,#4a8a20)',rc:'#F44336'},
+      {id:6,e:'💕',ttl:'Boulevard',                              rating:'B15',genre:'Romance, Drama',       price:155,bg:'linear-gradient(135deg,#2a1a2a,#7a3a7a)',rc:'#FF9800'},
+    ]
+  },
+  viajes:{
+    name:'ViajaBus', tagline:'', cls:'v-viajes',
+    icon:'🚌', url:'viajabus.com.mx',
+    routes:[
+      {id:1,from:'Ciudad de Mexico',to:'Queretaro',dep:'03:40 AM',arr:'06:20 AM',dur:'2h 40m',seats:25,price:645,tag:'Mas rapido'},
+      {id:2,from:'Ciudad de Mexico',to:'Queretaro',dep:'12:10 AM',arr:'03:00 AM',dur:'2h 50m',seats:12,price:645},
+      {id:3,from:'Ciudad de Mexico',to:'Queretaro',dep:'06:00 AM',arr:'08:50 AM',dur:'2h 50m',seats:18,price:645},
+      {id:4,from:'Ciudad de Mexico',to:'Queretaro',dep:'08:30 AM',arr:'11:20 AM',dur:'2h 50m',seats:30,price:645},
+      {id:5,from:'Ciudad de Mexico',to:'Guadalajara',dep:'10:00 PM',arr:'05:30 AM',dur:'7h 30m',seats:22,price:890},
+    ]
+  }
+};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+var S = {
+  vert:null, ch:null, page:'home', prevPage:'merch-checkout',
+  selProd:null, selSize:null, cart:{},
+  selMovie:null, selTime:null, selSeats:[],
+  selRoute:null, selSeat:null,
+  superCat:0,
+  enDateIdx:0,
+  payOpt:'aplazo',
+  ckPlan:1, ckCB:false, ckDates:false, ckMp:true,
+};
+
+// ══════════════════════════════════════════
+// SETUP HANDLERS
+// ══════════════════════════════════════════
+function pickV(el){
+  document.querySelectorAll('[data-v]').forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel'); S.vert=el.dataset.v;
+  var step2=document.getElementById('step2');
+  step2.querySelectorAll('.so').forEach(function(e){e.classList.add('on');});
+  checkReady();
+}
+function pickCh(el){
+  document.querySelectorAll('[data-ch]').forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel'); S.ch=el.dataset.ch;
+  checkReady();
+}
+function checkReady(){
+  document.getElementById('go-btn').disabled = !(S.vert && S.ch);
+}
+function launch(){
+  document.getElementById('setup').style.display='none';
+  document.getElementById('app').classList.add('show');
+  var vert=V[S.vert];
+  document.body.className = vert.cls;
+  document.getElementById('tb-lbl').textContent = vert.icon+' '+vert.name+' · '+(S.ch==='desktop'?'Desktop':'Movil');
+  // start on correct first page per vertical
+  if(S.vert==='entret') S.page='en-movies';
+  else if(S.vert==='viajes') S.page='vj-search';
+  else S.page='product-list';
+  render();
+}
+function restart(){
+  document.querySelectorAll('.so').forEach(function(e){e.classList.remove('sel');});
+  document.querySelectorAll('#step2 .so').forEach(function(e){e.classList.remove('on');});
+  S={vert:null,ch:null,page:'home',prevPage:'merch-checkout',selProd:null,selSize:null,cart:{},selMovie:null,selTime:null,selSeats:[],selRoute:null,selSeat:null,superCat:0,enDateIdx:0,payOpt:'aplazo',ckPlan:1,ckCB:false,ckDates:false,ckMp:true,otpVal:''};
+  document.getElementById('go-btn').disabled=true;
+  document.getElementById('setup').style.display='flex';
+  document.getElementById('app').classList.remove('show');
+  document.body.className='';
+  prog(5);
+}
+
+// ══════════════════════════════════════════
+// PROGRESS + LABEL
+// ══════════════════════════════════════════
+var PROG={'product-list':8,pdp:28,cart:42,'merch-checkout':55,'en-movies':8,'en-showtime':30,'en-seats':50,'en-checkout':65,'vj-search':8,'vj-schedules':28,'vj-seats':50,'vj-passenger':65,'az-login':72,'az-otp':78,aplazo:85,'ck-success':93,success:100};
+var LABELS={'product-list':'Catalogo',pdp:'Detalle del producto',cart:'Carrito','merch-checkout':'Finalizar compra','en-movies':'Cartelera','en-showtime':'Seleccionar funcion','en-seats':'Elegir asientos','en-checkout':'Pago','vj-search':'Buscar viaje','vj-schedules':'Horarios disponibles','vj-seats':'Elegir asiento','vj-passenger':'Datos del pasajero','az-login':'Login Aplazo','az-otp':'Verificar telefono',aplazo:'Checkout Aplazo','ck-success':'Pago Autorizado',success:'Compra Confirmada'};
+function prog(v){document.getElementById('pfill').style.width=v+'%';}
+function label(p){
+  document.getElementById('step-txt').textContent = LABELS[p]||p;
+  prog(PROG[p]||5);
+}
+
+// ══════════════════════════════════════════
+// ROUTING
+// ══════════════════════════════════════════
+function go(p){S.page=p;render();}
+function render(){
+  label(S.page);
+  var html='';
+  var p=S.page;
+  if(S.vert==='moda'){
+    if(p==='product-list') html=rModaList();
+    else if(p==='pdp') html=rModaPDP();
+    else if(p==='cart') html=rCart();
+    else if(p==='merch-checkout') html=rMerchCk();
+    else if(p==='az-login') html=rAzLogin();
+    else if(p==='az-otp') html=rAzOtp();
+    else if(p==='aplazo') html=rAplazo();
+    else if(p==='success') html=rSuccess();
+  } else if(S.vert==='super'){
+    if(p==='product-list') html=rSuperList();
+    else if(p==='pdp') html=rSuperPDP();
+    else if(p==='cart') html=rCart();
+    else if(p==='merch-checkout') html=rMerchCk();
+    else if(p==='az-login') html=rAzLogin();
+    else if(p==='az-otp') html=rAzOtp();
+    else if(p==='aplazo') html=rAplazo();
+    else if(p==='success') html=rSuccess();
+  } else if(S.vert==='entret'){
+    if(p==='en-movies') html=rEnMovies();
+    else if(p==='en-showtime') html=rEnShowtime();
+    else if(p==='en-seats') html=rEnSeats();
+    else if(p==='en-checkout') html=rEnCk();
+    else if(p==='az-login') html=rAzLogin();
+    else if(p==='az-otp') html=rAzOtp();
+    else if(p==='aplazo') html=rAplazo();
+    else if(p==='success') html=rSuccess();
+  } else if(S.vert==='viajes'){
+    if(p==='vj-search') html=rVjSearch();
+    else if(p==='vj-schedules') html=rVjSchedules();
+    else if(p==='vj-seats') html=rVjSeats();
+    else if(p==='vj-passenger') html=rVjPassenger();
+    else if(p==='az-login') html=rAzLogin();
+    else if(p==='az-otp') html=rAzOtp();
+    else if(p==='aplazo') html=rAplazo();
+    else if(p==='success') html=rSuccess();
+  }
+  wrap(html);
+  var b=document.querySelector('.df-body,.pf-body');
+  if(b) setTimeout(function(){b.scrollTop=0;},20);
+}
+
+function wrap(html){
+  var vert=V[S.vert];
+  var isAplazo=(S.page==='az-login'||S.page==='az-otp'||S.page==='aplazo'||S.page==='ck-success');
+  var url=isAplazo?'checkout.aplazo.com':vert.url;
+  var lock=isAplazo?'🔒 ':'';
+  var fw=document.getElementById('fw');
+  if(S.ch==='desktop'){
+    fw.innerHTML='<div class="df"><div class="df-chrome"><div class="df-dot" style="background:#ff5f57"></div><div class="df-dot" style="background:#febc2e"></div><div class="df-dot" style="background:#28c840"></div><div class="df-url"><span>'+lock+url+'</span></div></div><div class="df-body" id="fc">'+html+'</div></div>';
+  } else {
+    fw.innerHTML='<div class="pf-wrap"><div class="pf"><div class="pf-notch"><div class="pf-pill"></div></div><div class="pf-url"><span>'+lock+url+'</span></div><div class="pf-body" id="fc">'+html+'</div></div></div>';
+  }
+}
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+function cartTotal(){
+  var vert=V[S.vert];
+  if(!vert.products) return 0;
+  return vert.products.reduce(function(s,p){return s+(S.cart[p.id]||0)*p.price;},0);
+}
+function cartCount(){return Object.values(S.cart).reduce(function(a,b){return a+b;},0);}
+function getTotal(){
+  if(S.vert==='entret'){var m=V.entret.movies.find(function(x){return x.id===S.selMovie;})||V.entret.movies[0];return S.selSeats.length*m.price;}
+  if(S.vert==='viajes'){var r=V.viajes.routes.find(function(x){return x.id===S.selRoute;})||V.viajes.routes[0];return r?r.price:645;}
+  return cartTotal();
+}
+
+function storeNav(noCart){
+  var vert=V[S.vert];
+  var cnt=cartCount();
+  var badge=cnt>0?'<div class="cart-badge">'+cnt+'</div>':'';
+  var cartClick=cnt>0?"go('cart')":'';
+  return '<nav class="snav"><div style="cursor:pointer" onclick="go(\'product-list\')"><div class="snav-logo">'+vert.name+'</div><div class="snav-tag">'+vert.tagline+'</div></div><div class="snav-flex"></div>'+(noCart?'':'<div class="snav-cart" onclick="'+cartClick+'"><i class="bi bi-bag"></i>'+badge+'</div>')+'</nav>';
+}
+
+function backRow(dest){
+  return '<div class="back-row" onclick="go(\''+dest+'\')"><i class="bi bi-arrow-left"></i><span>Regresar</span></div>';
+}
+
+function azLogoHtml(){return '<div class="az-logo"><span>aplazo</span></div>';}
+
+// payment options builder
+function payOptsHtml(opts){
+  var html='';
+  for(var i=0;i<opts.length;i++){
+    var o=opts[i];
+    var isSel=S.payOpt===o.k;
+    var cls='pay-opt'+(isSel?' sel':'')+(o.dis?' dis':'');
+    var click=o.dis?"showCardDis()":'setPayOpt(\''+o.k+'\')';
+    html+='<div class="'+cls+'" onclick="'+click+'">';
+    html+='<div class="pay-radio"></div>';
+    html+='<div style="flex:1">';
+    if(o.az){html+=azLogoHtml();}
+    else{html+='<div class="pay-name">'+o.name+'</div>';}
+    if(o.sub){html+='<div class="pay-sub">'+o.sub+'</div>';}
+    if(o.dis){html+='<div class="pay-dis-lbl">No disponible en esta demo</div>';}
+    html+='</div></div>';
+  }
+  return html;
+}
+
+function setPayOpt(k){S.payOpt=k;render();}
+function showCardDis(){
+  var el=document.querySelector('.dis');
+  if(el){el.style.outline='2px solid var(--red)';setTimeout(function(){el.style.outline='';},700);}
+}
+function proceedToAplazo(){
+  if(S.payOpt!=='aplazo'){showCardDis();return;}
+  var map={moda:'merch-checkout',super:'merch-checkout',entret:'en-checkout',viajes:'vj-passenger'};
+  S.prevPage=map[S.vert]||'merch-checkout';
+  S.ckPlan=1;S.ckCB=false;S.ckDates=false;S.ckMp=true;
+  S.otpVal='';
+  // Desktop: show login flow. Mobile: assume app already open, go direct to checkout
+  if(S.ch==='desktop'){go('az-login');}
+  else{go('aplazo');}
+}
+function ckClose(){go(S.prevPage||'merch-checkout');}
+
+// ══════════════════════════════════════════
+// MODA
+// ══════════════════════════════════════════
+function rModaList(){
+  var v=V.moda;
+  var cards='';
+  for(var i=0;i<v.products.length;i++){
+    var p=v.products[i];
+    var tag=p.tag?'<div class="m-tag">'+p.tag+'</div>':'';
+    cards+='<div class="m-card" onclick="openPDP('+p.id+')">'+tag+'<div class="m-img">'+p.e+'</div><div class="m-brand">'+p.brand+'</div><div class="m-name">'+p.name+'</div><div class="m-price">'+fmt(p.price)+'</div><div class="m-sub">3 plazos sin interes con aplazo</div></div>';
+  }
+  return storeNav()+' <div class="m-grid">'+cards+'</div>';
+}
+function openPDP(id){S.selProd=id;S.selSize=null;go('pdp');}
+function rModaPDP(){
+  var v=V.moda;
+  var p=v.products.find(function(x){return x.id===S.selProd;})||v.products[0];
+  var inCart=S.cart[p.id]||0;
+  var sizes='';
+  for(var i=0;i<v.sizes.length;i++){
+    var s=v.sizes[i];
+    sizes+='<div class="m-sz'+(S.selSize===s?' sel':'')+'" onclick="selSize(\''+s+'\')">'+s+'</div>';
+  }
+  var cartBtns=inCart>0?'<button class="outline-btn" style="width:100%" onclick="go(\'cart\')">Ver carrito ('+inCart+')</button>':'';
+  return storeNav()+backRow('product-list')+'<div class="m-pdp-img">'+p.e+'</div><div class="m-pdp-body">'+(p.tag?'<div class="m-pdp-badge">'+p.tag+'</div><br>':'')+'<div class="m-pdp-brand">'+p.brand+'</div><div class="m-pdp-name">'+p.name+'</div><div class="m-pdp-price">'+fmt(p.price)+'</div><div class="m-aplazo-row">Paga en 3 plazos con <span class="az-chip">aplazo</span> sin comision en tu primera compra</div><div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px">Talla</div><div class="m-sizes">'+sizes+'</div><button class="m-atc" onclick="addCartPDP('+p.id+')">'+(inCart>0?'Agregado — Anadir otra':'Anadir al carrito')+'</button>'+cartBtns+'<div class="m-desc">'+v.desc+'</div></div>';
+}
+function selSize(s){S.selSize=s;render();}
+function addCartPDP(id){S.cart[id]=(S.cart[id]||0)+1;render();}
+
+// ══════════════════════════════════════════
+// SUPER
+// ══════════════════════════════════════════
+function rSuperList(){
+  var v=V.super;
+  var cats='';
+  for(var i=0;i<v.cats.length;i++){
+    cats+='<div class="su-cat'+(S.superCat===i?' sel':'')+'" onclick="setSuperCat('+i+')">'+v.cats[i]+'</div>';
+  }
+  var cards='';
+  for(var j=0;j<v.products.length;j++){
+    var p=v.products[j];
+    var added=S.cart[p.id]?'added':'';
+    var btnIcon=S.cart[p.id]?'<i class="bi bi-check-lg"></i>':'<i class="bi bi-plus-lg"></i>';
+    var oldHtml=p.old?'<span class="su-old">'+fmt(p.old)+'</span>':'';
+    cards+='<div class="su-card" onclick="openSuperPDP('+p.id+')"><div class="su-img">'+p.e+'</div><div class="su-info"><div class="su-name">'+p.name+'</div><div class="su-sub">'+(p.sub||'')+'</div><div class="su-prices">'+oldHtml+'<span class="su-price">'+fmt(p.price)+'</span></div></div><button class="su-add '+added+'" onclick="event.stopPropagation();addSuperCart('+p.id+')">'+btnIcon+'</button></div>';
+  }
+  var stickyBtn=cartCount()>0?'<div class="sticky-cart-btn"><button onclick="go(\'cart\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh-xl)"><i class="bi bi-bag"></i> Ver carrito · '+fmt(cartTotal())+'</button></div>':'';
+  return storeNav()+'<div class="su-cats">'+cats+'</div><div class="su-list">'+cards+'</div>'+stickyBtn;
+}
+function setSuperCat(i){S.superCat=i;render();}
+function addSuperCart(id){S.cart[id]=(S.cart[id]||0)+1;render();}
+function openSuperPDP(id){S.selProd=id;go('pdp');}
+function rSuperPDP(){
+  var v=V.super;
+  var p=v.products.find(function(x){return x.id===S.selProd;})||v.products[0];
+  var inCart=S.cart[p.id]||0;
+  var oldHtml=p.old?'<span class="su-pdp-old">'+fmt(p.old)+'</span>':'';
+  return storeNav()+backRow('product-list')+'<div class="su-pdp-img">'+p.e+'</div><div class="su-pdp-body"><div class="su-pdp-brand">'+p.brand+'</div><div class="su-pdp-name">'+p.name+'</div><div class="su-pdp-sub">'+(p.sub||'')+'</div><div class="su-pdp-prices"><span class="su-pdp-price">'+fmt(p.price)+'</span>'+oldHtml+'</div><div style="background:var(--n100);border-radius:12px;padding:12px;font-size:12px;font-weight:600;color:var(--t2);line-height:1.7;margin-bottom:16px">'+v.desc+'</div><button class="su-atc" onclick="addSuperCart('+p.id+');go(\'product-list\')">Agregar'+(inCart>0?' ('+inCart+' en carrito)':'')+'</button></div>';
+}
+
+// ══════════════════════════════════════════
+// CART (shared Moda + Super)
+// ══════════════════════════════════════════
+function rCart(){
+  var v=V[S.vert];
+  var items=v.products.filter(function(p){return S.cart[p.id];});
+  var total=cartTotal();
+  var rows='';
+  for(var i=0;i<items.length;i++){
+    var p=items[i];
+    var qty=S.cart[p.id];
+    rows+='<div class="ci"><div class="ci-img">'+p.e+'</div><div class="ci-info"><div class="ci-name">'+p.name+'</div><div class="ci-price">'+fmt(p.price)+(qty>1?' x '+qty:'')+'</div></div><div class="ci-rm" onclick="removeCart('+p.id+')"><i class="bi bi-x"></i></div></div>';
+  }
+  return storeNav(true)+'<div class="cart-pg"><div class="cart-back-row"><div class="cart-back" onclick="go(\'product-list\')"><i class="bi bi-arrow-left"></i></div><div class="cart-ttl">Tu carrito</div></div>'+rows+'<div class="cart-sum"><div class="cs-row"><span>Subtotal</span><span>'+fmt(total)+'</span></div><div class="cs-row"><span>Envio</span><span style="color:var(--green);font-weight:700">Gratis</span></div><div class="cs-row total"><span>Total</span><span>'+fmt(total)+'</span></div></div><button class="cart-cta" onclick="go(\'merch-checkout\')">Proceder al pago &rarr;</button></div>';
+}
+function removeCart(id){delete S.cart[id];if(!cartCount())go('product-list');else render();}
+
+// ══════════════════════════════════════════
+// MERCHANT CHECKOUT (shared Moda + Super)
+// ══════════════════════════════════════════
+function rMerchCk(){
+  var v=V[S.vert];
+  var items=v.products.filter(function(p){return S.cart[p.id];});
+  var total=cartTotal();
+  var orderRows='';
+  for(var i=0;i<items.length;i++){
+    var p=items[i];
+    orderRows+='<div class="mck-oi"><span>'+p.name+(S.cart[p.id]>1?' x'+S.cart[p.id]:'')+'</span><span>'+fmt(p.price*(S.cart[p.id]||1))+'</span></div>';
+  }
+  var payOpts=payOptsHtml([
+    {k:'aplazo',az:true,sub:'Paga en plazos quincenales · 3 sin interes'},
+    {k:'card',name:'Tarjeta de credito / debito',dis:true}
+  ]);
+  var ctaLabel=S.payOpt==='aplazo'?'Pagar con Aplazo &rarr;':'Continuar &rarr;';
+  return storeNav(true)+'<div class="mck"><div class="mck-ttl">Finalizar compra</div><div class="mck-order">'+orderRows+'<div class="mck-oi total"><span>Total</span><span>'+fmt(total)+'</span></div></div><div class="mck-sec-lbl">Datos de envio</div><input class="mck-inp" value="Maria Gonzalez" readonly><div class="mck-2col"><input class="mck-inp" value="maria@email.com" readonly><input class="mck-inp" value="55 1234 5678" readonly></div><input class="mck-inp" value="Av. Insurgentes Sur 1234, CDMX" readonly><div class="mck-sec-lbl" style="margin-top:14px">Metodo de pago</div>'+payOpts+'<button class="mck-cta" onclick="proceedToAplazo()">'+ctaLabel+'</button></div>';
+}
+
+// ══════════════════════════════════════════
+// ENTRET
+// ══════════════════════════════════════════
+var EN_DATES=['Hoy 23 Abr','Manana 24 Abr','Sab 25 Abr','Dom 26 Abr','Lun 27 Abr','Mar 28 Abr'];
+function rEnMovies(){
+  var v=V.entret;
+  var dates='';
+  for(var i=0;i<EN_DATES.length;i++){dates+='<div class="en-date'+(S.enDateIdx===i?' sel':'')+'" onclick="setEnDate('+i+')">'+EN_DATES[i]+'</div>';}
+  var movies='';
+  for(var j=0;j<v.movies.length;j++){
+    var m=v.movies[j];
+    movies+='<div class="en-movie" onclick="selMovie('+m.id+')"><div class="en-poster" style="background:'+m.bg+'"><div class="en-rating" style="background:'+m.rc+'">'+m.rating+'</div><span style="font-size:48px">'+m.e+'</span></div><div class="en-movie-info"><div class="en-movie-ttl">'+m.ttl+'</div><div class="en-movie-meta">'+m.genre+'</div></div></div>';
+  }
+  return '<nav class="en-nav"><div class="en-nav-logo">CineMax</div><div class="en-nav-links"><div class="en-nav-lnk sel">Peliculas</div><div class="en-nav-lnk">Alimentos</div><div class="en-nav-lnk">Club</div></div></nav><div class="en-tabs"><div class="en-tab sel">Cartelera</div><div class="en-tab">Horarios</div></div><div class="en-dates">'+dates+'</div><div class="en-movies">'+movies+'</div>';
+}
+function setEnDate(i){S.enDateIdx=i;render();}
+function selMovie(id){S.selMovie=id;S.selTime=null;S.selSeats=[];go('en-showtime');}
+function rEnShowtime(){
+  var v=V.entret;
+  var m=v.movies.find(function(x){return x.id===S.selMovie;})||v.movies[0];
+  var times='';
+  for(var i=0;i<v.showtimes.length;i++){
+    var t=v.showtimes[i];
+    times+='<div class="en-time'+(S.selTime===t?' sel':'')+'" onclick="selTime(\''+t+'\')">'+t+'</div>';
+  }
+  var contBtn=S.selTime?'<div style="padding:0 16px 16px"><button onclick="go(\'en-seats\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Seleccionar asientos</button></div>':'';
+  return '<nav class="en-nav"><div style="cursor:pointer;color:rgba(255,255,255,.7)" onclick="go(\'en-movies\')"><i class="bi bi-arrow-left"></i></div><div class="en-nav-logo">CineMax</div><div></div></nav><div class="en-banner" style="background:'+m.bg+'"><div style="font-size:54px;flex-shrink:0">'+m.e+'</div><div><div style="font-size:16px;font-weight:800;color:#fff;line-height:1.3">'+m.ttl+'</div><div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="background:'+m.rc+';color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px">'+m.rating+'</span><span style="font-size:11px;color:rgba(255,255,255,.7);font-weight:600">'+m.genre+'</span></div></div></div><div class="en-steps"><div class="en-st cur">Horario</div><div class="en-st">Asientos</div><div class="en-st">Alimentos</div><div class="en-st">Pago</div></div><div class="en-showtimes"><div class="en-st-day">Galerias Acapulco &nbsp;·&nbsp; '+EN_DATES[S.enDateIdx]+'</div><div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:8px">Espanol</div><div class="en-times">'+times+'</div></div>'+contBtn;
+}
+function selTime(t){S.selTime=t;render();}
+var TAKEN_SEATS={A7:1,B3:1,B9:1,C1:1,D5:1,E11:1,F7:1,G2:1,G8:1,H4:1,I6:1};
+function isTaken(r,n){return TAKEN_SEATS[r+''+n]===1;}
+function rEnSeats(){
+  var v=V.entret;
+  var m=v.movies.find(function(x){return x.id===S.selMovie;})||v.movies[0];
+  var rows=['A','B','C','D','E','F','G','H','I'];
+  var seatMap='';
+  for(var ri=0;ri<rows.length;ri++){
+    var row=rows[ri];
+    seatMap+='<div class="en-row"><div class="en-row-lbl">'+row+'</div>';
+    var left=[10,9,8,7,6,5];
+    for(var li=0;li<left.length;li++){
+      var n=left[li];
+      var key=row+n;
+      var tak=isTaken(row,n);
+      var isSel=S.selSeats.indexOf(key)>=0;
+      var cls=tak?'taken':isSel?'sel':'free';
+      var click=tak?'':' onclick="toggleSeat(\''+key+'\')"';
+      seatMap+='<div class="en-seat '+cls+'"'+click+'>'+n+'</div>';
+    }
+    seatMap+='<div class="en-seat gap" style="width:10px"></div>';
+    var right=[4,3,2,1];
+    for(var ri2=0;ri2<right.length;ri2++){
+      var n2=right[ri2];
+      var key2=row+n2;
+      var tak2=isTaken(row,n2);
+      var isSel2=S.selSeats.indexOf(key2)>=0;
+      var cls2=tak2?'taken':isSel2?'sel':'free';
+      var click2=tak2?'':' onclick="toggleSeat(\''+key2+'\')"';
+      seatMap+='<div class="en-seat '+cls2+'"'+click2+'>'+n2+'</div>';
+    }
+    seatMap+='</div>';
+  }
+  var total=S.selSeats.length*m.price;
+  var seatSummary='';
+  if(S.selSeats.length>0){
+    var countLabel=S.selSeats.length+' asiento'+(S.selSeats.length>1?'s':'');
+    seatSummary='<div style="padding:0 14px;margin-top:4px"><div style="background:var(--va-l);border-radius:12px;padding:13px;margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Asientos</span><span>'+S.selSeats.join(', ')+'</span></div><div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid rgba(0,0,0,.08);margin-top:6px;padding-top:8px"><span>Total</span><span>'+fmt(total)+'</span></div></div><button onclick="go(\'en-checkout\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Continuar con '+countLabel+'</button></div>';
+  }
+  return '<nav class="en-nav"><div style="cursor:pointer;color:rgba(255,255,255,.7)" onclick="go(\'en-showtime\')"><i class="bi bi-arrow-left"></i></div><div class="en-nav-logo">CineMax</div><div></div></nav><div class="en-steps"><div class="en-st done">Horario</div><div class="en-st cur">Asientos</div><div class="en-st">Alimentos</div><div class="en-st">Pago</div></div><div class="en-screen">PANTALLA | SALA 4</div><div class="en-seat-legend"><span><div style="width:14px;height:12px;border-radius:2px;background:var(--va-acc);display:inline-block;margin-right:3px"></div>Seleccionado</span><span><div style="width:14px;height:12px;border-radius:2px;background:#e8ecf0;border:1px solid #ddd;display:inline-block;margin-right:3px"></div>Disponible</span><span><div style="width:14px;height:12px;border-radius:2px;background:#e0e0e0;opacity:.5;display:inline-block;margin-right:3px"></div>Ocupado</span></div><div class="en-seat-map">'+seatMap+'</div>'+seatSummary+'<div style="height:20px"></div>';
+}
+function toggleSeat(key){
+  var idx=S.selSeats.indexOf(key);
+  if(idx>=0){S.selSeats.splice(idx,1);}
+  else if(S.selSeats.length<4){S.selSeats.push(key);}
+  render();
+}
+function rEnCk(){
+  var v=V.entret;
+  var m=v.movies.find(function(x){return x.id===S.selMovie;})||v.movies[0];
+  var total=S.selSeats.length*m.price;
+  var countLabel=S.selSeats.length+' boleto'+(S.selSeats.length>1?'s':'');
+  var payOpts=payOptsHtml([
+    {k:'aplazo',az:true,sub:'Pago en quincenas'},
+    {k:'card',name:'Tarjeta de credito o debito',dis:true}
+  ]);
+  var ctaLabel=S.payOpt==='aplazo'?'Pagar con Aplazo &rarr;':'Continuar &rarr;';
+  return '<nav class="en-nav"><div style="cursor:pointer;color:rgba(255,255,255,.7)" onclick="go(\'en-seats\')"><i class="bi bi-arrow-left"></i></div><div class="en-nav-logo">CineMax</div><div></div></nav><div class="en-steps"><div class="en-st done">Horario</div><div class="en-st done">Asientos</div><div class="en-st done">Alimentos</div><div class="en-st cur">Pago</div></div><div class="en-ck-sec"><div class="en-ck-lbl">Datos personales</div><input class="en-inp" value="Maria Gonzalez" readonly><input class="en-inp" value="maria@email.com" readonly></div><div class="en-ck-sec"><div class="en-ck-lbl">Metodo de pago</div>'+payOpts+'</div><div style="background:var(--va-l);border-radius:12px;padding:13px;margin:12px 16px 0"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:8px">Tu pedido</div><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:3px 0"><span>'+m.ttl+'</span><span style="font-size:11px"></span></div><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:3px 0"><span>'+countLabel+' · Asientos '+S.selSeats.join(', ')+'</span><span>'+fmt(total)+'</span></div><div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid rgba(0,0,0,.08);margin-top:6px;padding-top:8px"><span>Total</span><span>'+fmt(total)+'</span></div></div><div style="padding:12px 16px 20px"><button style="display:block;width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif" onclick="proceedToAplazo()">'+ctaLabel+'</button></div>';
+}
+
+// ══════════════════════════════════════════
+// VIAJES
+// ══════════════════════════════════════════
+function rVjSearch(){
+  return '<div><div class="vj-hdr"><div class="vj-logo-bar"><div class="vj-logo">ViajaBus</div></div><div style="padding:0 14px 14px"><div class="vj-search"><div class="vj-sr"><div class="vj-city"><div class="vj-city-lbl">Origen</div><div class="vj-city-val">Ciudad de Mexico</div></div><div class="vj-sw"><i class="bi bi-arrow-left-right"></i></div><div class="vj-city"><div class="vj-city-lbl">Destino</div><div class="vj-city-val">Queretaro</div></div></div><div class="vj-info-row"><div class="vj-if"><div class="vj-if-lbl">Ida</div><div class="vj-if-val">24-Abr-26</div></div><div class="vj-if"><div class="vj-if-lbl">Regreso</div><div class="vj-if-val" style="color:var(--t3)">Opcional</div></div><div class="vj-if"><div class="vj-if-lbl">Viajeros</div><div class="vj-if-val">1 pasajero</div></div></div><button class="vj-bus-btn" onclick="go(\'vj-schedules\')"><i class="bi bi-search"></i> Buscar</button></div></div></div><div style="padding:28px;text-align:center;color:var(--t3)"><div style="font-size:40px;margin-bottom:12px">🚌</div><div style="font-size:14px;font-weight:700;color:var(--t2)">Busca tu viaje</div><div style="font-size:12px;font-weight:600;margin-top:4px">Elige origen, destino y fecha para ver los horarios.</div></div></div>';
+}
+function rVjSchedules(){
+  var v=V.viajes;
+  var trips='';
+  for(var i=0;i<v.routes.length;i++){
+    var r=v.routes[i];
+    var isSel=S.selRoute===r.id;
+    var tag=r.tag?'<div class="vj-trip-tag">'+r.tag+'</div>':'';
+    trips+='<div class="vj-trip'+(isSel?' sel':'')+'" onclick="selRoute('+r.id+')">'+tag+'<div class="vj-times"><div class="vj-time">'+r.dep+'</div><div class="vj-arrow">— Directo &rarr;</div><div class="vj-time">'+r.arr+'</div></div><div class="vj-tm"><div><div class="vj-dur">'+r.dur+'</div><div class="vj-seats-lbl">'+r.seats+' asientos disponibles</div></div><div style="text-align:right"><div class="vj-trip-price">'+fmt(r.price)+' MXN</div><div style="font-size:11px;font-weight:700;color:var(--va-acc);text-decoration:underline;cursor:pointer;margin-top:2px">Ver asientos</div></div></div></div>';
+  }
+  return '<div><div style="background:var(--va);padding-bottom:12px"><div style="display:flex;align-items:center;padding:10px 16px;gap:8px"><div style="cursor:pointer;color:rgba(255,255,255,.7);font-size:18px" onclick="go(\'vj-search\')"><i class="bi bi-arrow-left"></i></div><div style="font-size:14px;font-weight:800;color:#fff">CDMX &rarr; Queretaro</div></div></div><div style="padding:14px 14px 24px"><div style="font-size:14px;font-weight:800;color:var(--t1);margin-bottom:12px">Horarios disponibles &nbsp;·&nbsp; 24 Abr</div>'+trips+'</div></div>';
+}
+function selRoute(id){S.selRoute=id;S.selSeat=null;go('vj-seats');}
+var TAKEN_BUS={3:1,7:1,10:1,15:1,20:1,25:1,28:1,32:1,5:1,18:1};
+function rVjSeats(){
+  var v=V.viajes;
+  var r=v.routes.find(function(x){return x.id===S.selRoute;})||v.routes[0];
+  var col1='', col2='', col3='', col4='';
+  for(var row=0;row<10;row++){
+    var nums=[row*4+1, row*4+2, row*4+3, row*4+4];
+    function seatDiv(n){
+      var tak=TAKEN_BUS[n]===1;
+      var isSel=S.selSeat===n;
+      var cls='vj-seat '+(tak?'taken':isSel?'sel':'free');
+      var click=tak?'':' onclick="selBusSeat('+n+')"';
+      return '<div class="'+cls+'"'+click+'>'+n+'</div>';
+    }
+    col1+=seatDiv(nums[0]);
+    col2+=seatDiv(nums[1]);
+    col3+=seatDiv(nums[2]);
+    col4+=seatDiv(nums[3]);
+  }
+  var summary='';
+  if(S.selSeat){
+    summary='<div style="background:var(--va-l);border-radius:12px;padding:13px;margin-top:13px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Asiento</span><span><b>'+S.selSeat+'</b></span></div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Ruta</span><span>CDMX &rarr; Queretaro</span></div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t2);padding:3px 0"><span>Horario</span><span>'+r.dep+'</span></div><div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid rgba(0,0,0,.08);margin-top:6px;padding-top:8px"><span>Total</span><span>'+fmt(r.price)+'</span></div></div><button style="display:block;width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;margin-top:12px" onclick="go(\'vj-passenger\')">Continuar &rarr;</button>';
+  }
+  return '<div><div style="background:var(--va);padding:10px 16px;display:flex;align-items:center;gap:10px"><div style="cursor:pointer;color:rgba(255,255,255,.7);font-size:18px" onclick="go(\'vj-schedules\')"><i class="bi bi-arrow-left"></i></div><div style="font-size:13px;font-weight:800;color:#fff">CDMX &rarr; Queretaro &nbsp;·&nbsp; '+r.dep+' &nbsp;·&nbsp; '+fmt(r.price)+'</div></div><div style="padding:14px 14px 24px"><div style="font-size:14px;font-weight:800;color:var(--t1);margin-bottom:12px">Elige tu asiento</div><div style="display:flex;gap:10px;margin-bottom:12px;font-size:10px;font-weight:600;color:var(--t2)"><span style="display:flex;align-items:center;gap:4px"><div style="width:18px;height:14px;border-radius:3px;background:var(--va-btn)"></div>Elegido</span><span style="display:flex;align-items:center;gap:4px"><div style="width:18px;height:14px;border-radius:3px;background:#e8ecf0;border:1px solid #ddd"></div>Libre</span><span style="display:flex;align-items:center;gap:4px"><div style="width:18px;height:14px;border-radius:3px;background:#e0e0e0;opacity:.5"></div>Ocupado</span></div><div style="background:#f8f8f8;border-radius:10px;padding:12px;display:flex;justify-content:center;gap:5px"><div style="display:flex;flex-direction:column;gap:5px">'+col1+'</div><div style="display:flex;flex-direction:column;gap:5px">'+col2+'</div><div style="width:20px"></div><div style="display:flex;flex-direction:column;gap:5px">'+col3+'</div><div style="display:flex;flex-direction:column;gap:5px">'+col4+'</div></div>'+summary+'</div></div>';
+}
+function selBusSeat(n){S.selSeat=n;render();}
+function rVjPassenger(){
+  var v=V.viajes;
+  var r=v.routes.find(function(x){return x.id===S.selRoute;})||v.routes[0];
+  var payOpts=payOptsHtml([
+    {k:'aplazo',az:true,sub:'Pago en quincenas · 5 plazos'},
+    {k:'card',name:'Credito o debito',dis:true}
+  ]);
+  var azInfo=S.payOpt==='aplazo'?'<div style="background:var(--va-l);border-radius:12px;padding:12px;margin-top:12px"><div style="font-size:11px;font-weight:600;color:var(--t2);line-height:1.7">&#10003; Pago en 5 comoda quincenas<br>&#10003; Prestamo en 3 minutos 100% digital<br>&#10003; Al dar click te redireccionara al checkout de Aplazo</div></div>':'';
+  var ctaLabel=S.payOpt==='aplazo'?'Pagar con Aplazo &rarr;':'Continuar &rarr;';
+  return '<div><div style="background:var(--va);padding:10px 16px;display:flex;align-items:center;gap:10px"><div style="cursor:pointer;color:rgba(255,255,255,.7);font-size:18px" onclick="go(\'vj-seats\')"><i class="bi bi-arrow-left"></i></div><div style="font-size:13px;font-weight:800;color:#fff">Paso 2 de 3 &nbsp;·&nbsp; Pasajeros</div></div><div style="padding:16px 18px 28px"><div style="font-size:16px;font-weight:800;color:var(--t1);margin-bottom:14px">Quien viaja?</div><div style="background:var(--va-l);border-radius:12px;padding:11px 13px;margin-bottom:14px;display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:var(--t1)"><span>CDMX &rarr; Queretaro &nbsp;·&nbsp; '+r.dep+'</span><span>Asiento '+S.selSeat+'</span></div><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px">Pasajero 1 &middot; Adulto</div><input style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:600;color:var(--t1);background:#fff;font-family:Plus Jakarta Sans,sans-serif;outline:none;margin-bottom:8px" value="Maria" readonly><input style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:600;color:var(--t1);background:#fff;font-family:Plus Jakarta Sans,sans-serif;outline:none;margin-bottom:8px" value="Gonzalez" readonly><input style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:13px;font-weight:600;color:var(--t1);background:#fff;font-family:Plus Jakarta Sans,sans-serif;outline:none;margin-bottom:14px" value="maria.gonzalez@email.com" readonly><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px">Selecciona tu forma de pago</div>'+payOpts+azInfo+'<div style="background:var(--va-l);border-radius:12px;padding:13px;margin:14px 0 16px"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:8px">Resumen del viaje</div><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:3px 0"><span>Ruta</span><span>CDMX &rarr; Queretaro</span></div><div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--t2);padding:3px 0"><span>Pasajero</span><span>1 Adulto &middot; Asiento '+S.selSeat+'</span></div><div style="display:flex;justify-content:space-between;font-size:14px;font-weight:800;color:var(--t1);border-top:1px solid rgba(0,0,0,.08);margin-top:6px;padding-top:8px"><span>Total</span><span>'+fmt(r.price)+'</span></div></div><button style="display:block;width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;transition:all .15s;text-align:center" onclick="proceedToAplazo()">'+ctaLabel+'</button></div></div>';
+}
+
+// ══════════════════════════════════════════
+// APLAZO LOGIN (desktop only)
+// ══════════════════════════════════════════
+function rAzLogin(){
+  var vert=V[S.vert];
+  return '<div style="display:flex;align-items:center;justify-content:center;min-height:100%;background:#fff;padding:40px 24px"><div style="width:100%;max-width:480px"><div onclick="ckClose()" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--t3);font-size:13px;font-weight:600;margin-bottom:24px"><i class="bi bi-arrow-left"></i></div><div style="margin-bottom:24px"><div class="ck-logo" style="display:inline-flex;margin-bottom:20px"><span>aplazo</span></div><div style="font-size:26px;font-weight:800;color:var(--t1);line-height:1.2;margin-bottom:8px">Continua con tu compra</div><div style="font-size:14px;color:var(--t3);font-weight:600;margin-bottom:28px">Estas por pagar en <b style="color:var(--t1)">'+vert.name+'</b> con APLAZO</div></div><div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:6px">Numero celular</div><div style="display:flex;gap:8px;margin-bottom:16px"><div style="display:flex;align-items:center;gap:6px;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;background:#f5f5f5;font-size:13px;font-weight:700;color:var(--t2);flex-shrink:0"><span>🇲🇽</span><span>(+52)</span></div><div style="flex:1;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:14px;font-weight:600;color:var(--t1);background:#fff">55-1234-5678</div></div><button onclick="go(\'az-otp\')" style="width:100%;padding:14px;background:#111;color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;margin-bottom:20px">Continuar</button><div style="background:#f0fafa;border-radius:14px;padding:14px;border:1px solid rgba(0,194,199,.3);margin-bottom:16px"><div style="display:flex;align-items:flex-start;gap:10px"><div style="width:20px;height:20px;border-radius:50%;background:rgba(0,194,199,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><i class="bi bi-info-circle" style="font-size:11px;color:var(--ck-teal)"></i></div><div><div style="font-size:13px;font-weight:700;color:var(--t1);margin-bottom:3px">Conoce tus APLAZO puntos</div><div style="font-size:12px;color:var(--t3);font-weight:600;line-height:1.5">Acepta los retos o refiere a tus contactos y empieza a ganar puntos desde tu app. Cada punto equivale a $1 peso!</div></div></div></div><div style="text-align:center"><a style="font-size:13px;font-weight:700;color:var(--ck-teal);text-decoration:underline;cursor:pointer">Cambiaste tu numero de telefono?</a></div></div></div>';
+}
+function renderAzLoginBtn(){}
+
+// ══════════════════════════════════════════
+// APLAZO OTP (desktop only) — auto-fill animation
+// ══════════════════════════════════════════
+function rAzOtp(){
+  var digits=S.otpVal?S.otpVal.split(''):[];
+  var boxes='';
+  for(var i=0;i<6;i++){
+    var val=digits[i]||'';
+    var filled=val?'border-color:#111;background:#f0fffe':'border-color:#ddd;background:#fff';
+    boxes+='<div style="width:52px;height:56px;border:2px solid;'+filled+';border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#111;transition:all .2s">'+val+'</div>';
+  }
+  var isAutoFilling=S.otpVal.length>0&&S.otpVal.length<6;
+  return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;background:#fff;padding:40px 24px"><div class="ck-logo" style="display:inline-flex;margin-bottom:28px"><span>aplazo</span></div><div style="position:absolute;top:16px;right:16px;width:28px;height:28px;background:#f0f0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#666" onclick="ckClose()"><i class="bi bi-x"></i></div><div style="font-size:26px;font-weight:800;color:var(--t1);margin-bottom:10px;text-align:center">Verifica tu telefono</div><div style="font-size:14px;color:var(--t3);font-weight:600;text-align:center;margin-bottom:32px;line-height:1.6">Ingresa el codigo que enviamos a<br><b style="color:var(--t1)">+52 55-1234-5678</b></div><div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:12px">Codigo</div><div style="display:flex;gap:8px;margin-bottom:20px">'+boxes+'</div><div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:24px">Reenviar codigo en 26</div>'+(S.otpVal.length===0?'<button onclick="startOtpAnim()" style="padding:14px 40px;background:#111;color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;margin-bottom:16px">Recibir codigo</button>':isAutoFilling?'<div style="font-size:13px;color:var(--t3);font-weight:600;display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;border-radius:50%;border:2px solid var(--ck-teal);border-top-color:transparent;animation:spin .6s linear infinite"></div>Ingresando codigo...</div>':'')+'<style>@keyframes spin{to{transform:rotate(360deg)}}</style><div style="display:flex;flex-direction:column;gap:8px;width:100%;max-width:360px;margin-top:16px"><button style="padding:11px;border:1.5px solid #ddd;border-radius:100px;background:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;color:var(--t2)">Enviar codigo por Whatsapp</button><button style="padding:11px;border:1.5px solid #ddd;border-radius:100px;background:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;color:var(--t2)">Enviar codigo por SMS</button></div></div>';
+}
+
+function startOtpAnim(){
+  S.otpVal='';
+  render();
+  var digits='123456';
+  var i=0;
+  function fillNext(){
+    if(i<digits.length){
+      S.otpVal+=digits[i];
+      i++;
+      render();
+      if(i<digits.length){
+        setTimeout(fillNext,220);
+      } else {
+        setTimeout(function(){go('aplazo');},500);
+      }
+    }
+  }
+  setTimeout(fillNext,300);
+}
+function otpKey(){}
+function typeOtp(){}
+
+
+function rAplazo(){
+  var monto=getTotal();
+  var plans=getPlans(monto);
+  var p=plans[S.ckPlan];
+  var base=S.ckCB?monto-CB:monto;
+  var com=base*(p.n===3?0:p.n===5?COM5:COM8);
+  var iva=com*IVA;
+  var total=base+com+iva;
+
+  // plan card
+  var opts='';
+  for(var i=0;i<plans.length;i++){
+    var q=plans[i];
+    var pop=i===1?'<span class="e2-pop">Popular</span>':'';
+    opts+='<div class="e2-opt'+(S.ckPlan===i?' sel':'')+'" onclick="setCkPlan('+i+')"><div class="e2-r"><div class="e2-rdot"></div></div><div style="flex:1"><div class="e2-name">'+fmt(q.pmt)+' × '+q.n+' plazos</div><div class="e2-detail"><span>'+(q.n===3?'Sin comision':'Comision: '+fmt(q.com))+'</span><span>Total: '+fmt(q.total)+'</span></div></div>'+pop+'</div>';
+  }
+  var tasaStr=p.n===3?'—':p.tasa.toFixed(2)+'%';
+  var planCard='<div class="pc"><div class="pc-top"><div><div class="pc-sel">'+p.n+' plazos de: '+fmt(p.pmt)+'</div><div class="pc-first">Primer plazo de '+fmt(p.pmt)+'</div></div><button class="pc-hide">Ocultar</button></div>'+opts+'<div style="font-size:10px;font-weight:600;color:#888;text-align:center;margin-top:8px">Tasa anual: '+tasaStr+'</div></div>';
+
+  var cpn='<div class="cpn"><span>Tienes un cupon?</span><span class="cpn-link">Agregar</span></div>';
+
+  var cbCheck=S.ckCB?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4L4 7.5L10 1" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':'';
+  var cbBorder=S.ckCB?'var(--ck-teal)':'#bbb';
+  var cbBg=S.ckCB?'var(--ck-teal)':'#fff';
+  var cb='<div class="cb-row'+(S.ckCB?' on':'')+'" onclick="toggleCB()"><div style="display:flex;align-items:center;gap:10px"><div style="width:18px;height:18px;border-radius:4px;border:1.5px solid '+cbBorder+';background:'+cbBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+cbCheck+'</div><span style="font-size:13px;font-weight:600;color:#111">Aplicar cashback APLAZO: '+fmt(CB)+'</span></div></div>';
+
+  // summary
+  var cbDisc=S.ckCB?'<div class="r-row disc"><span>Cashback APLAZO</span><span>-'+fmt(CB)+'</span></div><div class="r-row" style="font-size:12.5px;color:#888;border-top:1px solid #eee;padding-top:5px;margin-top:3px"><span>Subtotal</span><span>'+fmt(base)+'</span></div>':'';
+  var resumen='<div style="margin-bottom:16px"><div style="font-size:17px;font-weight:800;color:#111;margin-bottom:12px">Resumen de pago</div><div class="r-row"><span>Monto de pago</span><span><b>'+fmt(monto)+'</b></span></div>'+cbDisc+'<div class="r-row"><span>Comision</span><span>'+fmt(com)+'</span></div><div class="r-row"><span>IVA por comision</span><span>'+fmt(iva)+'</span></div><div class="r-row total"><span>Total a pagar</span><span>'+fmt(total)+'</span></div><div style="font-size:11px;font-weight:600;color:#888;text-align:center;margin-top:5px">Tasa anual: '+tasaStr+'</div></div>';
+
+  // fechas
+  var extraDates='';
+  if(S.ckDates){
+    for(var di=0;di<p.n-1;di++){
+      extraDates+='<div class="tl-line"></div><div class="tl-row"><div class="tl-dot-e"></div><span style="flex:1">'+DATES[di]+'</span><span>'+fmt(p.pmt)+'</span></div>';
+    }
+  }
+  var toggleDatesLabel=S.ckDates?'Ocultar ∧':'Mostrar ∨';
+  var fechas='<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#111">Aqui tus fechas de pago</div><span style="font-size:13px;font-weight:700;color:var(--ck-teal);cursor:pointer" onclick="toggleDates()">'+toggleDatesLabel+'</span></div><div class="tl-hoy"><div class="tl-dot-f"></div><span style="flex:1">Hoy solo pagas esto</span><span>'+fmt(p.pmt)+'</span></div>'+extraDates+'</div>';
+
+  // metodo
+  var mpContent=S.ckMp?'<div class="mp-card"><div class="mp-sel"></div><div class="mp-visa">VISA</div><div style="flex:1"><div style="font-size:14px;font-weight:700;color:#111">···· 6178</div><div style="font-size:11px;color:#aaa;font-weight:600;margin-top:1px">Los plazos se cobraran a esta tarjeta</div></div><span style="font-size:13px;font-weight:600;color:#555;cursor:pointer">Cambiar</span></div>':'';
+  var toggleMpLabel=S.ckMp?'Ocultar ∧':'Mostrar ∨';
+  var metodo='<div style="margin-bottom:16px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#111">Aqui tu metodo de pago</div><span style="font-size:13px;font-weight:700;color:var(--ck-teal);cursor:pointer" onclick="toggleMp()">'+toggleMpLabel+'</span></div>'+mpContent+'</div>';
+
+  var barHtml='<div style="display:flex;gap:8px"><div class="ck-hd"><i class="bi bi-headphones"></i></div><button class="ck-x" onclick="ckClose()"><i class="bi bi-x"></i></button></div>';
+
+  if(S.ch==='desktop'){
+    // Full-page 2-col layout — no card wrapper, fills the df-body
+    return '<div style="display:flex;flex-direction:column;height:100%;background:#f5f5f5"><div style="display:flex;align-items:center;justify-content:space-between;padding:14px 32px 12px;border-bottom:2.5px solid var(--ck-teal);background:#fff;flex-shrink:0"><div style="width:32px"></div><div class="ck-logo"><span>aplazo</span></div>'+barHtml+'</div><div style="flex:1;overflow-y:auto;padding:28px 40px"><div style="font-size:22px;font-weight:800;color:#111;text-align:center;margin-bottom:24px;font-family:Manrope,sans-serif">Paga a tu ritmo</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:900px;margin:0 auto"><div><div class="ck-col-ttl">Elige tus plazos</div>'+planCard+cpn+cb+'</div><div><div class="ck-col-ttl">Tu resumen</div>'+resumen+fechas+metodo+'<button class="ck-cta" onclick="go(\'success\')">Pagar ahora</button></div></div></div></div>';
+  }
+  return '<div class="ck-wrap"><div class="ck-bar"><div style="width:32px"></div><div class="ck-logo"><span>aplazo</span></div>'+barHtml+'</div><div class="ck-body"><div style="font-size:16px;font-weight:800;color:#111;margin-bottom:12px">Paga a tu ritmo</div>'+planCard+cpn+cb+resumen+fechas+metodo+'<button class="ck-cta" onclick="go(\'success\')">Pagar</button></div></div>';
+}
+function setCkPlan(i){S.ckPlan=i;render();}
+function toggleCB(){S.ckCB=!S.ckCB;render();}
+function toggleDates(){S.ckDates=!S.ckDates;render();}
+function toggleMp(){S.ckMp=!S.ckMp;render();}
+
+// ══════════════════════════════════════════
+// APLAZO SUCCESS
+// ══════════════════════════════════════════
+function rCkSuccess(){
+  var monto=getTotal();
+  var plans=getPlans(monto);
+  var p=plans[S.ckPlan];
+  var content='<div class="ck-ok"><div class="ck-ok-circle">&#10003;</div><div class="ck-ok-ttl">Pago autorizado!</div><div class="ck-ok-sub">Tu compra fue procesada. Recibiras un SMS con los detalles de tu plan de pagos.</div><div class="ck-ok-card"><div class="ck-ok-row"><span>Total</span><span>'+fmt(monto)+'</span></div><div class="ck-ok-row"><span>Plan</span><span>'+p.n+' plazos quincenales</span></div><div class="ck-ok-row"><span>Primer pago</span><span>'+fmt(p.pmt)+'</span></div><div class="ck-ok-row"><span>Fecha</span><span>Hoy</span></div><div class="ck-ok-row"><span>Estado</span><span style="color:#22863a;font-weight:800">&#10003; Autorizado</span></div></div><button class="teal-outline-btn" onclick="go(\'success\')">Ver confirmacion del pedido</button><button class="outline-btn" style="margin-top:8px" onclick="restart()">Nueva demo</button></div>';
+  if(S.ch==='desktop'){
+    return '<div style="display:flex;flex-direction:column;height:100%;background:#f5f5f5"><div style="display:flex;align-items:center;justify-content:center;padding:14px 32px 12px;border-bottom:2.5px solid var(--ck-teal);background:#fff;flex-shrink:0"><div class="ck-logo"><span>aplazo</span></div></div><div style="flex:1;overflow-y:auto;display:flex;align-items:center;justify-content:center">'+content+'</div></div>';
+  }
+  return '<div class="ck-wrap">'+content+'</div>';
+}
+
+// ══════════════════════════════════════════
+// MERCHANT SUCCESS PAGE (Shopify-style)
+// ══════════════════════════════════════════
+function rSuccess(){
+  var monto=getTotal();
+  var plans=getPlans(monto);
+  var p=plans[S.ckPlan];
+  var orderNum='EX'+Math.random().toString(36).substr(2,6).toUpperCase();
+  var vert=V[S.vert];
+
+  // nav
+  var nav='';
+  if(S.vert==='entret'){
+    nav='<nav class="en-nav"><div></div><div class="en-nav-logo">CineMax</div><div></div></nav>';
+  } else if(S.vert==='viajes'){
+    nav='<div style="background:var(--va);padding:12px 18px"><div style="font-size:16px;font-weight:800;color:#fff">ViajaBus</div></div>';
+  } else {
+    nav=storeNav(true);
+  }
+
+  // items summary
+  var itemRows='';
+  if(vert.products){
+    var items=vert.products.filter(function(x){return S.cart[x.id];});
+    for(var i=0;i<items.length;i++){
+      var it=items[i];
+      var qty=S.cart[it.id]||1;
+      itemRows+='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eee"><div style="width:48px;height:48px;border-radius:8px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative">'+it.e+'<div style="position:absolute;top:-6px;right:-6px;background:#555;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">'+qty+'</div></div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t1)">'+it.name+'</div></div><div style="font-size:13px;font-weight:700;color:var(--t1)">'+fmt(it.price*qty)+'</div></div>';
+    }
+  } else if(S.vert==='entret'){
+    var m=V.entret.movies.find(function(x){return x.id===S.selMovie;})||V.entret.movies[0];
+    var cnt=S.selSeats.length;
+    itemRows='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eee"><div style="width:48px;height:48px;border-radius:8px;background:'+m.bg+';display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative">'+m.e+'<div style="position:absolute;top:-6px;right:-6px;background:#555;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">'+cnt+'</div></div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t1)">'+m.ttl+'</div><div style="font-size:11px;color:var(--t3);font-weight:600;margin-top:2px">Asientos: '+S.selSeats.join(', ')+'</div></div><div style="font-size:13px;font-weight:700;color:var(--t1)">'+fmt(monto)+'</div></div>';
+  } else if(S.vert==='viajes'){
+    var r=V.viajes.routes.find(function(x){return x.id===S.selRoute;})||V.viajes.routes[0];
+    itemRows='<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #eee"><div style="width:48px;height:48px;border-radius:8px;background:var(--va-l);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;position:relative">🚌<div style="position:absolute;top:-6px;right:-6px;background:#555;color:#fff;border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">1</div></div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--t1)">CDMX &rarr; Queretaro</div><div style="font-size:11px;color:var(--t3);font-weight:600;margin-top:2px">Asiento '+S.selSeat+' &nbsp;·&nbsp; '+r.dep+'</div></div><div style="font-size:13px;font-weight:700;color:var(--t1)">'+fmt(monto)+'</div></div>';
+  }
+
+  if(S.ch==='desktop'){
+    // Shopify-style 2-col: left = confirmation, right = order summary
+    return nav+'<div style="display:grid;grid-template-columns:1fr 420px;min-height:calc(100% - 52px)"><div style="padding:40px 48px;border-right:1px solid #eee"><div style="display:flex;align-items:center;gap:12px;margin-bottom:6px"><div style="width:36px;height:36px;border-radius:50%;border:2px solid var(--va-acc);display:flex;align-items:center;justify-content:center;color:var(--va-acc);font-size:16px;flex-shrink:0"><i class="bi bi-check-lg"></i></div><div><div style="font-size:12px;font-weight:600;color:var(--t3)">Confirmacion N°'+orderNum+'</div><div style="font-size:24px;font-weight:800;color:var(--t1)">Gracias!</div></div></div><div style="margin-bottom:20px;border:1.5px solid #eee;border-radius:12px;padding:16px"><div style="font-size:15px;font-weight:700;color:var(--t1);margin-bottom:4px">Tu pedido esta confirmado</div><div style="font-size:13px;color:var(--t3);font-weight:600">Pronto recibiras un mensaje de texto de confirmacion</div></div><div style="margin-bottom:20px;border:1.5px solid #eee;border-radius:12px;padding:16px"><div style="font-size:15px;font-weight:700;color:var(--t1);margin-bottom:4px">Actualizaciones del pedido</div><div style="font-size:13px;color:var(--t3);font-weight:600;margin-bottom:10px">Recibiras actualizaciones del envio y entrega de tu pedido por correo electronico.</div><a style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--va-acc);cursor:pointer"><i class="bi bi-envelope"></i> Recibe actualizaciones del estado de tu envio</a></div><div style="border:1.5px solid #eee;border-radius:12px;padding:16px"><div style="font-size:15px;font-weight:700;color:var(--t1);margin-bottom:14px">Detalles del pedido</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;font-weight:600;color:var(--t2)"><div><div style="font-weight:700;color:var(--t1);margin-bottom:4px">Informacion de contacto</div><div>maria.gonzalez@email.com</div></div><div><div style="font-weight:700;color:var(--t1);margin-bottom:4px">Metodos de pago</div><div style="display:flex;align-items:center;gap:6px">'+azLogoHtml()+'<span>&nbsp;·&nbsp; '+fmt(monto)+' MXN</span></div></div><div><div style="font-weight:700;color:var(--t1);margin-bottom:4px">Direccion de envio</div><div>Av. Insurgentes Sur 1234<br>CDMX 06600<br>Mexico</div></div><div><div style="font-weight:700;color:var(--t1);margin-bottom:4px">Metodo de envio</div><div>Standard — GRATIS</div></div></div></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid #eee"><a style="font-size:13px;font-weight:700;color:var(--va-acc);cursor:pointer">Necesitas ayuda? Contactanos</a><button onclick="restart()" style="padding:12px 24px;background:var(--va-btn);color:var(--va-btn-t);border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Seguir comprando</button></div></div><div style="padding:32px 32px;background:#f8f8f8"><div style="font-size:14px;font-weight:700;color:var(--t2);margin-bottom:14px">'+vert.name+'</div>'+itemRows+'<div style="margin-top:14px;padding-top:14px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t3);padding:3px 0"><span>Subtotal</span><span>'+fmt(monto)+'</span></div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t3);padding:3px 0"><span>Envio</span><span style="color:var(--green);font-weight:700">GRATIS</span></div><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;color:var(--t1);border-top:1px solid #eee;margin-top:8px;padding-top:10px"><span>Total</span><span>MXN '+fmt(monto)+'</span></div></div></div></div>';
+  }
+
+  // Mobile: stacked
+  return nav+'<div style="padding:20px 18px 32px"><div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><div style="width:32px;height:32px;border-radius:50%;border:2px solid var(--va-acc);display:flex;align-items:center;justify-content:center;color:var(--va-acc);font-size:14px;flex-shrink:0"><i class="bi bi-check-lg"></i></div><div><div style="font-size:11px;color:var(--t3);font-weight:600">Confirmacion N°'+orderNum+'</div><div style="font-size:20px;font-weight:800;color:var(--t1)">Gracias!</div></div></div><div style="background:#fff;border:1.5px solid #eee;border-radius:12px;padding:14px;margin-bottom:12px"><div style="font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px">Tu pedido esta confirmado</div><div style="font-size:12px;color:var(--t3);font-weight:600">Pronto recibiras un mensaje de confirmacion</div></div><div style="margin-bottom:12px">'+itemRows+'</div><div style="background:#f8f8f8;border-radius:12px;padding:13px;margin-bottom:16px"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t3);padding:3px 0"><span>Subtotal</span><span>'+fmt(monto)+'</span></div><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--t3);padding:3px 0"><span>Envio</span><span style="color:var(--green);font-weight:700">GRATIS</span></div><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;color:var(--t1);border-top:1px solid #eee;margin-top:8px;padding-top:8px"><span>Total</span><span>'+fmt(monto)+'</span></div></div><button onclick="restart()" style="width:100%;padding:14px;background:var(--va-btn);color:var(--va-btn-t);border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Nueva demostracion</button></div>';
+}
+</script>
+</body>
+</html>

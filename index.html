@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplazo · Sales Simulator</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif}
+body{background:linear-gradient(160deg,#0a2b2d 0%,#214345 50%,#0a2b2d 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;position:relative;overflow:hidden}
+
+/* background blur circles */
+body::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(74,201,227,.12) 0%,transparent 70%);top:-100px;left:-150px;pointer-events:none}
+body::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(74,201,227,.08) 0%,transparent 70%);bottom:-80px;right:-100px;pointer-events:none}
+
+/* logo */
+.logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:48px}
+.logo-chip{background:#4AC9E3;border-radius:100px;padding:8px 20px;display:inline-flex;align-items:center}
+.logo-chip span{font-family:'Manrope',sans-serif;font-weight:800;font-size:20px;color:#214345}
+.logo-label{font-size:14px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+
+/* headline */
+.headline{text-align:center;margin-bottom:52px}
+.headline h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px;letter-spacing:-.5px}
+.headline h1 span{color:#4AC9E3}
+.headline p{font-size:16px;font-weight:600;color:rgba(255,255,255,.55);max-width:460px;line-height:1.6}
+
+/* cards */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:700px;margin-bottom:36px}
+@media(max-width:600px){.cards{grid-template-columns:1fr}}
+.card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:24px;padding:32px 28px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;flex-direction:column;gap:0;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,201,227,.08) 0%,transparent 60%);opacity:0;transition:opacity .2s}
+.card:hover{border-color:rgba(74,201,227,.5);background:rgba(255,255,255,.09);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.card:hover::before{opacity:1}
+.card-icon{width:56px;height:56px;border-radius:16px;background:rgba(74,201,227,.15);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;border:1.5px solid rgba(74,201,227,.2)}
+.card-badge{position:absolute;top:20px;right:20px;background:rgba(74,201,227,.15);border:1px solid rgba(74,201,227,.3);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:800;color:#4AC9E3;letter-spacing:.5px;text-transform:uppercase}
+.card h2{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.2}
+.card p{font-size:13px;font-weight:600;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:24px;flex:1}
+.card-flow{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
+.flow-step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
+.flow-dot{width:5px;height:5px;border-radius:50%;background:#4AC9E3;flex-shrink:0}
+.card-cta{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.1);transition:all .2s}
+.card:hover .card-cta{background:rgba(74,201,227,.15);border-color:rgba(74,201,227,.3)}
+.card-cta span{font-size:13px;font-weight:800;color:#fff}
+.card-cta-arrow{width:28px;height:28px;border-radius:50%;background:rgba(74,201,227,.2);display:flex;align-items:center;justify-content:center;color:#4AC9E3;font-size:14px;transition:all .2s}
+.card:hover .card-cta-arrow{background:#4AC9E3;color:#214345;transform:translateX(2px)}
+
+/* divider */
+.divider{display:flex;align-items:center;gap:12px;width:100%;max-width:700px;margin-bottom:24px}
+.divider-line{flex:1;height:1px;background:rgba(255,255,255,.1)}
+.divider-text{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+
+/* footer */
+.footer{text-align:center}
+.footer p{font-size:12px;font-weight:600;color:rgba(255,255,255,.25);line-height:1.8}
+.footer strong{color:rgba(255,255,255,.4)}
+</style>
+</head>
+<body>
+
+<div class="logo-wrap">
+  <div class="logo-chip"><span>aplazo</span></div>
+  <div class="logo-label">Sales Simulator</div>
+</div>
+
+<div class="headline">
+  <h1>Simula el proceso de compra<br>con <span>Aplazo</span></h1>
+  <p>Demostraciones interactivas de punta a punta para el equipo de ventas. Elige el canal que quieres mostrar.</p>
+</div>
+
+<div class="cards">
+
+  <!-- ONLINE -->
+  <a class="card" href="online.html">
+    <div class="card-badge">Desktop · Móvil</div>
+    <div class="card-icon">🛍️</div>
+    <h2>Venta Online</h2>
+    <p>Simula el flujo de compra en un ecommerce: catálogo, carrito, checkout del comercio y checkout de Aplazo.</p>
+    <div class="card-flow">
+      <div class="flow-step"><div class="flow-dot"></div>Catálogo de productos</div>
+      <div class="flow-step"><div class="flow-dot"></div>Carrito + checkout del comercio</div>
+      <div class="flow-step"><div class="flow-dot"></div>Login Aplazo + OTP (desktop)</div>
+      <div class="flow-step"><div class="flow-dot"></div>Checkout E2 + confirmación</div>
+    </div>
+    <div class="card-cta">
+      <span>Abrir simulador online</span>
+      <div class="card-cta-arrow">→</div>
+    </div>
+  </a>
+
+  <!-- OFFLINE -->
+  <a class="card" href="offline.html">
+    <div class="card-badge">POS · Presencial</div>
+    <div class="card-icon">🏪</div>
+    <h2>Venta Offline</h2>
+    <p>Simula el flujo en punto de venta: el cajero procesa la orden, envía el link al cliente y espera confirmación.</p>
+    <div class="card-flow">
+      <div class="flow-step"><div class="flow-dot"></div>POS con catálogo y orden</div>
+      <div class="flow-step"><div class="flow-dot"></div>WhatsApp · SMS · Código QR</div>
+      <div class="flow-step"><div class="flow-dot"></div>Checkout en teléfono del cliente</div>
+      <div class="flow-step"><div class="flow-dot"></div>Confirmación en ambas pantallas</div>
+    </div>
+    <div class="card-cta">
+      <span>Abrir simulador offline</span>
+      <div class="card-cta-arrow">→</div>
+    </div>
+  </a>
+
+</div>
+
+<div class="divider">
+  <div class="divider-line"></div>
+  <div class="divider-text">Verticales disponibles</div>
+  <div class="divider-line"></div>
+</div>
+
+<div style="display:flex;gap:10px;margin-bottom:40px;flex-wrap:wrap;justify-content:center">
+  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
+    <span style="font-size:16px">👟</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Moda</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
+    <span style="font-size:16px">🛒</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Supermercado</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
+    <span style="font-size:16px">🎬</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Entretenimiento</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
+    <span style="font-size:16px">🚌</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Viajes</span>
+  </div>
+</div>
+
+<div class="footer">
+  <p>
+    <strong>Uso interno · Equipo de Ventas Aplazo</strong><br>
+    Simulador de demos — no conectado a producción ni a datos reales
+  </p>
+</div>
+
+</body>
+</html>
