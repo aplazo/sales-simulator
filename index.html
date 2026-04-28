@@ -38,12 +38,12 @@ body{display:flex;background:#0a2b2d}
 .welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;background:linear-gradient(160deg,#0a2b2d 0%,#214345 50%,#0a2b2d 100%);overflow:hidden}
 .welcome::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(74,201,227,.1) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
 .welcome::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(74,201,227,.07) 0%,transparent 70%);bottom:-80px;left:-80px;pointer-events:none}
-.welcome-inner{position:relative;z-index:1}
+.welcome-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%}
 .welcome h1{font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px}
 .welcome h1 span{color:#4AC9E3}
 .welcome p{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);max-width:420px;line-height:1.7;margin-bottom:36px}
-.cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:stretch}
-.card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;cursor:pointer;transition:all .2s;text-align:left;width:190px;display:flex;flex-direction:column}
+.cards{display:flex;gap:16px;justify-content:center;align-items:stretch;flex-wrap:wrap}
+.card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:22px 20px;cursor:pointer;transition:all .2s;text-align:left;width:210px;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start}
 .card:hover{border-color:rgba(74,201,227,.4);background:rgba(255,255,255,.09);transform:translateY(-2px)}
 .card-icon{font-size:26px;margin-bottom:10px;display:block}
 .card-chip{background:#4AC9E3;border-radius:100px;padding:5px 14px;display:inline-flex;align-items:center;margin-bottom:12px;width:fit-content}
@@ -106,7 +106,7 @@ body{display:flex;background:#0a2b2d}
 <div class="content">
   <div class="welcome" id="welcome">
     <div class="welcome-inner">
-      <h1>Bienvenido al<br><span>Sales Simulator</span></h1>
+      <h1>Bienvenido al<br><span>Simulador de compras</span></h1>
       <p>Elige un simulador de la barra lateral o selecciona una opción para comenzar.</p>
       <div class="cards">
         <div class="card" onclick="loadSim('online.html','nav-online')">
