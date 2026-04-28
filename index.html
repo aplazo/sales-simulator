@@ -41,13 +41,15 @@ body{display:flex;background:#0a2b2d}
 .welcome-inner{position:relative;z-index:1}
 .welcome h1{font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px}
 .welcome h1 span{color:#4AC9E3}
-.welcome p{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);max-width:380px;line-height:1.7;margin-bottom:36px}
-.welcome-cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-.wc{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;cursor:pointer;transition:all .2s;text-align:left;width:200px}
-.wc:hover{border-color:rgba(74,201,227,.4);background:rgba(255,255,255,.09);transform:translateY(-2px)}
-.wc-icon{font-size:24px;margin-bottom:10px;display:block}
-.wc-name{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
-.wc-sub{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);line-height:1.5}
+.welcome p{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);max-width:420px;line-height:1.7;margin-bottom:36px}
+.cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+.card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;cursor:pointer;transition:all .2s;text-align:left;width:190px;display:flex;flex-direction:column}
+.card:hover{border-color:rgba(74,201,227,.4);background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.card-icon{font-size:26px;margin-bottom:10px;display:block}
+.card-chip{background:#4AC9E3;border-radius:100px;padding:5px 14px;display:inline-flex;align-items:center;margin-bottom:12px;width:fit-content}
+.card-chip span{font-family:'Manrope',sans-serif;font-weight:800;font-size:12px;color:#214345}
+.card-name{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.card-sub{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);line-height:1.5}
 .welcome.hidden{display:none}
 
 /* ══ IFRAME ══ */
@@ -66,32 +68,31 @@ body{display:flex;background:#0a2b2d}
   <div class="sb-section-lbl">Simuladores</div>
 
   <div class="sb-item" id="nav-online" onclick="loadSim('online.html','nav-online')">
-    <div class="sb-item-icon">🛍️</div>
+    <div class="sb-item-icon">🌐</div>
     <div>
       <div class="sb-item-name">Online</div>
-      <div class="sb-item-sub">Ecommerce · Web</div>
+      <div class="sb-item-sub">Flujo de compra Ecommerce</div>
     </div>
   </div>
 
   <div class="sb-item" id="nav-offline" onclick="loadSim('offline.html','nav-offline')">
-    <div class="sb-item-icon">🏪</div>
+    <div class="sb-item-icon">🏬</div>
     <div>
       <div class="sb-item-name">Offline</div>
-      <div class="sb-item-sub">POS · Presencial</div>
+      <div class="sb-item-sub">Flujo de compra Tienda Física (POS)</div>
     </div>
   </div>
 
-  <div class="sb-divider"></div>
-  <div class="sb-section-lbl">Verticales</div>
-
-  <div style="padding:4px 10px 10px">
-    <div style="display:flex;flex-wrap:wrap;gap:5px">
-      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">👟 Moda</div>
-      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🛒 Super</div>
-      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🎬 Cine</div>
-      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🚌 Viajes</div>
+  <div class="sb-item" id="nav-posui" onclick="loadSim('posui.html','nav-posui')">
+    <div class="sb-item-icon">🖥️</div>
+    <div>
+      <div class="sb-item-name">POSUI</div>
+      <div class="sb-item-sub">Flujo de compra POS Aplazo</div>
     </div>
   </div>
+
+
+
 
   <div class="sb-bottom">
     <div class="sb-bottom-txt">
@@ -107,21 +108,25 @@ body{display:flex;background:#0a2b2d}
     <div class="welcome-inner">
       <h1>Bienvenido al<br><span>Sales Simulator</span></h1>
       <p>Elige un simulador de la barra lateral o selecciona una opción para comenzar.</p>
-      <div class="welcome-cards">
-        <div class="wc" onclick="loadSim('online.html','nav-online')">
-          <span class="wc-icon">🛍️</span>
-          <div class="wc-name">Online</div>
-          <div class="wc-sub">Ecommerce con checkout Aplazo. Desktop y móvil.</div>
+      <div class="cards">
+        <div class="card" onclick="loadSim('online.html','nav-online')">
+          <div class="card-chip"><span>aplazo</span></div>
+          <div class="card-name">Online</div>
+          <div class="card-sub">Flujo de compra en ecommerce. Desktop y móvil con checkout Aplazo.</div>
         </div>
-        <div class="wc" onclick="loadSim('offline.html','nav-offline')">
-          <span class="wc-icon">🏪</span>
-          <div class="wc-name">Offline</div>
-          <div class="wc-sub">POS presencial con pantalla dividida cajero + cliente.</div>
+        <div class="card" onclick="loadSim('offline.html','nav-offline')">
+          <div class="card-chip"><span>aplazo</span></div>
+          <div class="card-name">Offline</div>
+          <div class="card-sub">Flujo de compra en tienda física. Pantalla dividida cajero + cliente.</div>
+        </div>
+        <div class="card" onclick="loadSim('posui.html','nav-posui')">
+          <div class="card-chip"><span>aplazo</span></div>
+          <div class="card-name">POSUI</div>
+          <div class="card-sub">Flujo de compra en tienda física con el POS de Aplazo.</div>
         </div>
       </div>
     </div>
   </div>
-
   <iframe id="sim-frame" title="Simulador Aplazo"></iframe>
 </div>
 

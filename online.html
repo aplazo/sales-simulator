@@ -30,27 +30,27 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a2e;color:var(--t
 .v-entret{--va:#1A3C6E;--va-l:#E8EFF8;--va-btn:#2D6BE4;--va-btn-t:#fff;--va-acc:#2D6BE4}
 .v-viajes{--va:#C0392B;--va-l:#FDEAEA;--va-btn:#C0392B;--va-btn-t:#fff;--va-acc:#C0392B}
 
-/* ════════════ SETUP ════════════ */
+/* ════ SETUP ════ */
 #setup{position:fixed;inset:0;background:linear-gradient(135deg,#0d1b2a,#214345);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px}
-.sc{background:#fff;border-radius:28px;padding:40px 44px;width:100%;max-width:620px;box-shadow:0 40px 100px rgba(0,0,0,.4)}
-.sc-logo{display:inline-flex;align-items:center;background:var(--cyan);border-radius:100px;padding:7px 18px;margin-bottom:28px}
+.sc{background:#fff;border-radius:28px;padding:40px 44px;width:100%;max-width:620px;min-height:420px;box-shadow:0 40px 100px rgba(0,0,0,.4);display:flex;flex-direction:column}
+.sc-logo{display:inline-flex;align-items:center;background:var(--cyan);border-radius:100px;padding:7px 18px;margin-bottom:24px;width:fit-content}
 .sc-logo span{font-weight:800;font-size:16px;color:var(--teal);font-family:'Manrope',sans-serif}
 .sc h1{font-size:26px;font-weight:800;color:var(--t1);margin-bottom:6px}
-.sc p{font-size:14px;color:var(--t3);font-weight:600;margin-bottom:32px;line-height:1.6}
+.sc p{font-size:14px;color:var(--t3);font-weight:600;margin-bottom:28px;line-height:1.6}
 .sc-step{margin-bottom:24px}
 .sc-lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;color:var(--t3);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .sc-lbl .sn{width:20px;height:20px;border-radius:50%;background:var(--teal);color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.so{border:2px solid var(--border);border-radius:16px;padding:14px 12px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;opacity:.45;pointer-events:none}
+.so{border:2px solid var(--border);border-radius:16px;padding:16px 12px;cursor:pointer;transition:all .15s;text-align:center;user-select:none;opacity:.45;pointer-events:none;min-height:110px;display:flex;flex-direction:column;align-items:center;justify-content:center}
 .so.on{opacity:1;pointer-events:all}
 .so:hover{border-color:var(--cyan);background:var(--foam)}
 .so.sel{border-color:var(--teal);background:rgba(33,67,69,.05)}
-.so .oi{font-size:28px;margin-bottom:6px;display:block}
-.so .on2{font-size:12px;font-weight:700;color:var(--t2);line-height:1.3}
-.so .os{font-size:10px;color:var(--t3);font-weight:600;margin-top:2px}
+.so .oi{font-size:28px;margin-bottom:8px;display:block}
+.so .on2{font-size:12px;font-weight:800;color:var(--t2);line-height:1.3}
+.so .os{font-size:10px;color:var(--t3);font-weight:600;margin-top:3px}
 .so.sel .on2{color:var(--teal)}
-.sc-cta{width:100%;padding:15px;background:var(--teal);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.sc-cta{width:100%;padding:15px;background:var(--teal);color:#fff;border:none;border-radius:100px;font-size:15px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px}
 .sc-cta:hover{background:#173032}
 .sc-cta:disabled{opacity:.3;cursor:not-allowed}
 
@@ -127,7 +127,75 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a2e;color:var(--t
 .m-atc:hover{opacity:.88}
 .m-desc{background:var(--n100);border-radius:12px;padding:12px;font-size:12px;font-weight:600;color:var(--t2);line-height:1.7;margin-top:12px}
 
-/* ════════════ SUPER ════════════ */
+/* ════ MODA NEW ════ */
+.m-hero{background:linear-gradient(135deg,#111 0%,#333 100%);padding:24px 16px;flex-shrink:0}
+.m-cats{display:flex;gap:8px;padding:12px 14px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #eee;flex-shrink:0}
+.m-cats::-webkit-scrollbar{display:none}
+.m-cat{background:var(--n100);border-radius:100px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--t2);white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0}
+.m-cat.sel{background:#111;color:#fff}
+.m-info{padding:8px 10px 10px}
+.m-cart-badge{position:absolute;top:8px;right:8px;background:var(--green);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.az-chip-sm{display:inline-flex;background:var(--cyan);border-radius:100px;padding:2px 8px;font-size:10px;font-weight:800;color:var(--teal);font-family:'Manrope',sans-serif;flex-shrink:0}
+.m-pdp-img-wrap{background:#f8f8f8;display:flex;align-items:center;justify-content:center;height:260px;position:relative;flex-shrink:0}
+.m-pdp-img-big{font-size:100px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.15))}
+.m-pdp-badge-img{position:absolute;top:12px;left:12px;background:#111;color:#fff;font-size:9px;font-weight:800;text-transform:uppercase;padding:3px 10px;border-radius:100px}
+.m-pdp-top{margin-bottom:10px}
+.m-pdp-name{font-size:17px;font-weight:800;color:var(--t1);line-height:1.3;margin-bottom:6px}
+.m-pdp-price{font-size:22px;font-weight:800;color:#e00}
+.m-aplazo-badge{display:flex;align-items:center;gap:8px;background:#f0fafa;border:1px solid rgba(0,194,199,.25);border-radius:10px;padding:10px 12px;margin-bottom:14px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--t2)}
+
+/* ════ SUPER NEW ════ */
+.su-aplazo-banner{display:flex;align-items:center;gap:10px;background:#f0fafa;padding:10px 14px;border-bottom:1px solid rgba(0,194,199,.2);font-size:12px;flex-shrink:0}
+.su-layout{display:flex;height:100%}
+.su-sidebar{width:100px;flex-shrink:0;background:#fff;border-right:1px solid #eee;padding:8px 0;overflow-y:auto}
+.su-scat{padding:10px 10px;font-size:11px;font-weight:700;color:var(--t2);cursor:pointer;border-left:3px solid transparent;line-height:1.4}
+.su-scat.sel{color:var(--va-acc);border-left-color:var(--va-acc);background:var(--va-l)}
+.su-products{flex:1;overflow-y:auto;padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start}
+.su-card2{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:10px;cursor:pointer;transition:all .15s;position:relative;display:flex;flex-direction:column;gap:6px}
+.su-card2:hover{border-color:var(--va-acc)}
+.su-disc{position:absolute;top:8px;left:8px;background:var(--va-btn);color:var(--va-btn-t);font-size:9px;font-weight:800;padding:2px 6px;border-radius:100px}
+.su-img2{height:70px;display:flex;align-items:center;justify-content:center;font-size:36px;background:#f8f8f8;border-radius:8px}
+.su-info2{flex:1}
+.su-name2{font-size:11.5px;font-weight:700;color:var(--t1);line-height:1.3}
+.su-sub2{font-size:10px;color:var(--t3);font-weight:600;margin-top:1px}
+.su-price2{font-size:13px;font-weight:800;color:var(--t1);margin-top:3px}
+.su-add-btn{width:100%;padding:6px;background:var(--va-btn);color:var(--va-btn-t);border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif}
+.su-qty-ctrl{display:flex;align-items:center;justify-content:center;gap:6px}
+.su-qty-ctrl button{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:14px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t1)}
+.su-qty-ctrl span{font-size:13px;font-weight:800;color:var(--t1);min-width:20px;text-align:center}
+.su-qty-ctrl-lg{display:flex;align-items:center;gap:10px}
+.su-qty-ctrl-lg button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--t1)}
+.su-qty-ctrl-lg span{font-size:16px;font-weight:800;color:var(--t1);min-width:24px;text-align:center}
+
+/* ── entret legacy steps (used by seats/checkout pages) ── */
+.en-steps{display:flex;gap:0;padding:10px 16px;background:#fff;border-bottom:1px solid #eee;flex-shrink:0;overflow-x:auto}
+.en-st{flex:1;text-align:center;font-size:11px;font-weight:700;color:var(--t3);padding:6px 4px;border-bottom:2px solid transparent;white-space:nowrap}
+.en-st.cur{color:var(--va-acc);border-bottom-color:var(--va-acc);font-weight:800}
+.en-st.done{color:var(--green);border-bottom-color:var(--green)}
+.en-nav-cart{color:rgba(255,255,255,.8);font-size:18px;cursor:pointer}
+.en-poster{height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.en-poster-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:8px 10px}
+.en-poster-ttl{font-size:11px;font-weight:800;color:#fff;line-height:1.3}
+.en-rating-badge{position:absolute;top:8px;right:8px;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:4px}
+.en-meta-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.en-steps-bar{display:flex;align-items:center;padding:12px 16px;background:#fff;border-bottom:1px solid #eee;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.en-steps-bar::-webkit-scrollbar{display:none}
+.en-step{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--t3);white-space:nowrap;flex-shrink:0;padding:4px 8px;border-radius:100px}
+.en-step.cur{color:var(--va-acc);background:var(--va-l);font-weight:800}
+.en-step.done{color:var(--green)}
+.en-step-line{flex:1;height:1.5px;background:#eee;min-width:12px}
+.en-step-line.done{background:var(--green)}
+
+/* ════ VIAJES NEW ════ */
+.vj-hdr-wrap{background:var(--va)}
+.vj-logo-bar{padding:14px 16px 0}
+.vj-logo{font-size:22px;font-weight:800;color:#fff;font-family:'Manrope',sans-serif}
+.vj-search-box{margin:10px 14px 16px;background:#fff;border-radius:16px;padding:16px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.vj-tabs-sm{display:flex;gap:8px;margin-bottom:12px}
+.vj-tab-sm{padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;color:var(--t3);background:var(--n100)}
+.vj-tab-sm.sel{background:var(--va-btn);color:var(--va-btn-t)}
+
+
 .su-cats{display:flex;gap:8px;padding:10px 14px;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #eee;flex-shrink:0}
 .su-cats::-webkit-scrollbar{display:none}
 .su-cat{background:var(--n100);border-radius:100px;padding:7px 14px;font-size:12px;font-weight:700;color:var(--t2);white-space:nowrap;cursor:pointer;transition:all .15s;flex-shrink:0}
@@ -379,8 +447,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a2e;color:var(--t
 <div id="setup">
   <div class="sc">
     <div class="sc-logo"><span>aplazo</span></div>
-    <h1>Sales Simulator</h1>
-    <p>Simula el proceso de compra completo para demostraciones con clientes.</p>
+    <h1>Simulador — flujo de compra en ecommerce</h1>
+    <p>Simulador del flujo de compra que experimentan los usuarios al comprar en un ecommerce con Aplazo.</p>
     <div class="sc-step">
       <div class="sc-lbl"><span class="sn">1</span> Giro del comercio</div>
       <div class="g4">
@@ -422,6 +490,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#1a1a2e;color:var(--t
 // ══════════════════════════════════════════
 var COM5=0.0499, COM8=0.0799, IVA=0.16, CB=80;
 var DATES=['26 Jun','10 Jul','24 Jul','8 Ago','22 Ago','5 Sep','19 Sep'];
+var EN_DATES=['Hoy 28 Abr','Man 29 Abr','Mie 30 Abr','Jue 1 May','Vie 2 May','Sab 3 May'];
 
 function fmt(n){
   return '$'+Number(n).toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -442,15 +511,16 @@ var V = {
   moda:{
     name:'Deportotal', tagline:'Todo para tu deporte', cls:'v-moda',
     icon:'👟', url:'deportotal.com.mx',
-    sizes:['24.5','25','25.5','26','26.5','27','27.5','28'],
-    desc:'Calzado diseñado para trail running. Suela Traxion con agarre superior. Upper de malla resistente al desgaste.',
+    sizesNum:['24.5','25','25.5','26','26.5','27','27.5','28'],
+    sizesSML:['XS','S','M','L','XL','XXL'],
+    desc:'Producto de alta calidad para tu deporte. Materiales premium seleccionados para rendimiento maximo.',
     products:[
-      {id:1,e:'🎒',brand:'ADIDAS',  name:'Mochila Adidas Ess Btu Ka6767',          price:999,  tag:'Mas vendido'},
-      {id:2,e:'👟',brand:'ASICS',   name:'Tenis Asics Ahq Upcourt 6 Hombre',       price:1799, tag:'Nuevo'},
-      {id:3,e:'🩱',brand:'ADIDAS',  name:'Biker Adidas Adizero Hombre',            price:699},
-      {id:4,e:'🥾',brand:'ADIDAS',  name:'Tenis Adidas Terrex Anylander Hombre',   price:1599, tag:'Hot'},
-      {id:5,e:'👕',brand:'NIKE',    name:'Playera Nike Dri-FIT Training',          price:899},
-      {id:6,e:'🧤',brand:'UA',      name:'Guantes UA Weightlifting',               price:549},
+      {id:1,e:'🎒',name:'Mochila Deportiva Ka6767',    price:999,  tag:'Mas vendido', sizeType:'none', cat:2},
+      {id:2,e:'👟',name:'Tenis Upcourt 6 Hombre',      price:1799, tag:'Nuevo',       sizeType:'num',  cat:1},
+      {id:3,e:'🩱',name:'Biker Adizero Hombre',         price:699,                    sizeType:'sml',  cat:2},
+      {id:4,e:'🥾',name:'Tenis Terrex Anylander',       price:1599, tag:'Hot',        sizeType:'num',  cat:1},
+      {id:5,e:'👕',name:'Playera Dri-FIT Training',     price:899,                    sizeType:'sml',  cat:2},
+      {id:6,e:'🧤',name:'Guantes Weightlifting',         price:549,                    sizeType:'none', cat:3},
     ]
   },
   super:{
@@ -459,15 +529,24 @@ var V = {
     cats:['Frutas y Verduras','Despensa','Lacteos','Bebidas','Limpieza'],
     desc:'Producto fresco de primera calidad, seleccionado directamente de productores locales.',
     products:[
-      {id:1,e:'🍅',brand:'FreshMart',name:'Tomate Saladet por kg',     price:55, old:62, sub:'Aprox 150g c/u'},
-      {id:2,e:'🍌',brand:'FreshMart',name:'Platano Chiapas por kg',    price:23,         sub:'Aprox 120g c/u'},
-      {id:3,e:'🥑',brand:'FreshMart',name:'Aguacate Hass por kg',      price:54,         sub:'Aprox 200g c/u'},
-      {id:4,e:'🧅',brand:'FreshMart',name:'Cebolla Blanca por kg',     price:30,         sub:'Aprox 400g c/u'},
-      {id:5,e:'🥕',brand:'FreshMart',name:'Zanahoria por kg',          price:19,         sub:'Aprox 150g c/u'},
-      {id:6,e:'🥦',brand:'FreshMart',name:'Brocoli pieza',             price:42, old:54, sub:'1 pieza aprox 500g'},
-      {id:7,e:'🍞',brand:'Bimbo',    name:'Pan Bimbo Blanco 620g',     price:43, old:54, sub:'1 pieza de 620g'},
-      {id:8,e:'🌾',brand:'Chedraui', name:'Arroz Super Extra 900g',    price:15, old:17, sub:'1 pieza de 900g'},
-      {id:9,e:'🍪',brand:'Marinela', name:'Galletas Barritas Fresa 268g',price:27,old:42,sub:'4 piezas de 268g'},
+      {id:1, e:'🍅',name:'Tomate Saladet por kg',    price:55,old:62,sub:'Aprox 150g c/u',   cat:0},
+      {id:2, e:'🍌',name:'Platano Chiapas por kg',   price:23,       sub:'Aprox 120g c/u',   cat:0},
+      {id:3, e:'🥑',name:'Aguacate Hass por kg',     price:54,       sub:'Aprox 200g c/u',   cat:0},
+      {id:4, e:'🧅',name:'Cebolla Blanca por kg',    price:30,       sub:'Aprox 400g c/u',   cat:0},
+      {id:5, e:'🥕',name:'Zanahoria por kg',         price:19,       sub:'Aprox 150g c/u',   cat:0},
+      {id:6, e:'🥦',name:'Brocoli pieza',            price:42,old:54,sub:'1 pieza aprox 500g',cat:0},
+      {id:7, e:'🍞',name:'Pan Blanco 620g',          price:43,old:54,sub:'1 pieza de 620g',  cat:1},
+      {id:8, e:'🌾',name:'Arroz Super Extra 900g',   price:15,old:17,sub:'1 pieza de 900g',  cat:1},
+      {id:9, e:'🍪',name:'Galletas Barritas Fresa',  price:27,old:42,sub:'4 piezas de 268g', cat:1},
+      {id:10,e:'🥛',name:'Leche Entera 1L',          price:28,       sub:'1 pieza de 1L',    cat:2},
+      {id:11,e:'🧀',name:'Queso Manchego 400g',      price:89,       sub:'1 pieza de 400g',  cat:2},
+      {id:12,e:'🍦',name:'Yogurt Natural 900g',      price:55,       sub:'1 pieza de 900g',  cat:2},
+      {id:13,e:'🥤',name:'Refresco Cola 2L',         price:32,       sub:'1 pieza de 2L',    cat:3},
+      {id:14,e:'💧',name:'Agua Natural 1.5L',        price:18,       sub:'1 pieza de 1.5L',  cat:3},
+      {id:15,e:'🧃',name:'Jugo Naranja 1L',          price:38,       sub:'1 pieza de 1L',    cat:3},
+      {id:16,e:'🧹',name:'Escoba Plastica',          price:65,       sub:'1 pieza',          cat:4},
+      {id:17,e:'🧽',name:'Esponja Loza x3',         price:29,       sub:'Pack de 3',        cat:4},
+      {id:18,e:'🧴',name:'Detergente Liquido 1L',   price:79,old:95,sub:'1 pieza de 1L',    cat:4},
     ]
   },
   entret:{
@@ -504,10 +583,12 @@ var S = {
   selProd:null, selSize:null, cart:{},
   selMovie:null, selTime:null, selSeats:[],
   selRoute:null, selSeat:null,
-  superCat:0,
+  superCat:0, modaCat:0,
   enDateIdx:0,
   payOpt:'aplazo',
   ckPlan:1, ckCB:false, ckDates:false, ckMp:true,
+  otpVal:'',
+  vjFrom:'Ciudad de Mexico', vjTo:'Queretaro', vjFromCode:'TAPO',
 };
 
 // ══════════════════════════════════════════
@@ -543,7 +624,7 @@ function launch(){
 function restart(){
   document.querySelectorAll('.so').forEach(function(e){e.classList.remove('sel');});
   document.querySelectorAll('#step2 .so').forEach(function(e){e.classList.remove('on');});
-  S={vert:null,ch:null,page:'home',prevPage:'merch-checkout',selProd:null,selSize:null,cart:{},selMovie:null,selTime:null,selSeats:[],selRoute:null,selSeat:null,superCat:0,enDateIdx:0,payOpt:'aplazo',ckPlan:1,ckCB:false,ckDates:false,ckMp:true,otpVal:''};
+  S={vert:null,ch:null,page:'home',prevPage:'merch-checkout',selProd:null,selSize:null,cart:{},selMovie:null,selTime:null,selSeats:[],selRoute:null,selSeat:null,superCat:0,modaCat:0,enDateIdx:0,payOpt:'aplazo',ckPlan:1,ckCB:false,ckDates:false,ckMp:true,otpVal:'',vjFrom:'Ciudad de Mexico',vjTo:'Queretaro',vjFromCode:'TAPO'};
   document.getElementById('go-btn').disabled=true;
   document.getElementById('setup').style.display='flex';
   document.getElementById('app').classList.remove('show');
@@ -696,59 +777,178 @@ function ckClose(){go(S.prevPage||'merch-checkout');}
 // ══════════════════════════════════════════
 function rModaList(){
   var v=V.moda;
+  // category filter bar
+  var cats=['Todo','Calzado','Ropa','Accesorios'];
+  var catBar='<div class="m-cats">';
+  cats.forEach(function(c,i){catBar+='<div class="m-cat'+(S.modaCat===i?' sel':'')+'" onclick="S.modaCat='+i+';render()">'+c+'</div>';});
+  catBar+='</div>';
+  // filter by cat (0=all)
+  var filtered=S.modaCat===0?v.products:v.products.filter(function(p){
+    return (S.modaCat===1&&(p.id===2||p.id===4))||(S.modaCat===2&&(p.id===1||p.id===3||p.id===5))||(S.modaCat===3&&p.id===6);
+  });
   var cards='';
-  for(var i=0;i<v.products.length;i++){
-    var p=v.products[i];
+  for(var i=0;i<filtered.length;i++){
+    var p=filtered[i];
     var tag=p.tag?'<div class="m-tag">'+p.tag+'</div>':'';
-    cards+='<div class="m-card" onclick="openPDP('+p.id+')">'+tag+'<div class="m-img">'+p.e+'</div><div class="m-brand">'+p.brand+'</div><div class="m-name">'+p.name+'</div><div class="m-price">'+fmt(p.price)+'</div><div class="m-sub">3 plazos sin interes con aplazo</div></div>';
+    var inCart=S.cart[p.id]?'<div class="m-cart-badge"><i class="bi bi-bag-check-fill"></i></div>':'';
+    cards+='<div class="m-card" onclick="openPDP('+p.id+')">'+tag+inCart+
+    '<div class="m-img">'+p.e+'</div>'+
+    '<div class="m-info">'+
+    '<div class="m-name">'+p.name+'</div>'+
+    '<div class="m-price">'+fmt(p.price)+'</div>'+
+    '<div class="m-sub"><div class="az-chip-sm">aplazo</div> 3 plazos de '+fmt(p.price/3)+' sin interes</div>'+
+    '</div></div>';
   }
-  return storeNav()+' <div class="m-grid">'+cards+'</div>';
+  return storeNav()+
+  '<div class="m-hero">'+
+  '<div style="font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:8px">Nueva coleccion</div>'+
+  '<div style="font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px">Equipo para<br>rendimiento maximo</div>'+
+  '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff">'+
+  '<div style="background:#4AC9E3;border-radius:100px;padding:2px 8px;font-size:10px;color:#111">aplazo</div> Paga en plazos · Sin interes'+
+  '</div></div>'+
+  catBar+
+  '<div class="m-grid">'+cards+'</div>';
 }
 function openPDP(id){S.selProd=id;S.selSize=null;go('pdp');}
 function rModaPDP(){
   var v=V.moda;
   var p=v.products.find(function(x){return x.id===S.selProd;})||v.products[0];
   var inCart=S.cart[p.id]||0;
-  var sizes='';
-  for(var i=0;i<v.sizes.length;i++){
-    var s=v.sizes[i];
-    sizes+='<div class="m-sz'+(S.selSize===s?' sel':'')+'" onclick="selSize(\''+s+'\')">'+s+'</div>';
+  // sizes depend on product type
+  var sizeSection='';
+  if(p.sizeType==='num'){
+    var sizes='';
+    for(var i=0;i<v.sizesNum.length;i++){
+      var s=v.sizesNum[i];
+      sizes+='<div class="m-sz'+(S.selSize===s?' sel':'')+'" onclick="selSize(\''+s+'\')">'+s+'</div>';
+    }
+    sizeSection='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+    '<div style="font-size:12px;font-weight:800;color:var(--t1)">Talla (cm)'+(S.selSize?' — <b>'+S.selSize+'</b>':'')+'</div>'+
+    '<div style="font-size:11px;font-weight:700;color:var(--t3);text-decoration:underline;cursor:pointer">Guia de tallas</div>'+
+    '</div>'+
+    '<div class="m-sizes">'+sizes+'</div>';
+  } else if(p.sizeType==='sml'){
+    var szLabels=['XS','S','M','L','XL','XXL'];
+    var sizes='';
+    for(var j=0;j<szLabels.length;j++){
+      var sz=szLabels[j];
+      sizes+='<div class="m-sz'+(S.selSize===sz?' sel':'')+'" onclick="selSize(\''+sz+'\')" style="width:auto;padding:0 12px">'+sz+'</div>';
+    }
+    sizeSection='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'+
+    '<div style="font-size:12px;font-weight:800;color:var(--t1)">Talla'+(S.selSize?' — <b>'+S.selSize+'</b>':'')+'</div>'+
+    '<div style="font-size:11px;font-weight:700;color:var(--t3);text-decoration:underline;cursor:pointer">Guia de tallas</div>'+
+    '</div>'+
+    '<div class="m-sizes">'+sizes+'</div>';
   }
-  var cartBtns=inCart>0?'<button class="outline-btn" style="width:100%" onclick="go(\'cart\')">Ver carrito ('+inCart+')</button>':'';
-  return storeNav()+backRow('product-list')+'<div class="m-pdp-img">'+p.e+'</div><div class="m-pdp-body">'+(p.tag?'<div class="m-pdp-badge">'+p.tag+'</div><br>':'')+'<div class="m-pdp-brand">'+p.brand+'</div><div class="m-pdp-name">'+p.name+'</div><div class="m-pdp-price">'+fmt(p.price)+'</div><div class="m-aplazo-row">Paga en 3 plazos con <span class="az-chip">aplazo</span> sin comision en tu primera compra</div><div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:6px">Talla</div><div class="m-sizes">'+sizes+'</div><button class="m-atc" onclick="addCartPDP('+p.id+')">'+(inCart>0?'Agregado — Anadir otra':'Anadir al carrito')+'</button>'+cartBtns+'<div class="m-desc">'+v.desc+'</div></div>';
+  // require size selection for shoes/clothing
+  var needsSize=p.sizeType!=='none';
+  var canAdd=!needsSize||S.selSize;
+  return storeNav()+
+  backRow('product-list')+
+  '<div class="m-pdp-img-wrap">'+
+  (p.tag?'<div class="m-pdp-badge-img">'+p.tag+'</div>':'')+
+  '<div class="m-pdp-img-big">'+p.e+'</div>'+
+  '</div>'+
+  '<div class="m-pdp-body">'+
+  '<div class="m-pdp-top"><div><div class="m-pdp-name">'+p.name+'</div><div class="m-pdp-price">'+fmt(p.price)+'</div></div></div>'+
+  '<div class="m-aplazo-badge">'+
+  '<div class="az-chip-sm" style="font-size:11px;padding:3px 10px">aplazo</div>'+
+  '<span>3 plazos de <b>'+fmt(p.price/3)+'</b> sin comision · Primera compra gratis</span>'+
+  '</div>'+
+  '<div style="display:flex;align-items:center;gap:6px;margin-bottom:14px">'+
+  '<div style="width:8px;height:8px;border-radius:50%;background:var(--green)"></div>'+
+  '<span style="font-size:12px;font-weight:700;color:var(--green)">En stock</span>'+
+  '</div>'+
+  sizeSection+
+  (inCart>0?
+    '<button class="m-atc" style="background:var(--green)" onclick="go(\'cart\')"><i class="bi bi-bag-check"></i> Ver carrito ('+inCart+') &rarr;</button>':
+    '<button class="m-atc" '+(canAdd?'':'style="opacity:.5" ')+' onclick="addCartPDP('+p.id+')">'+(needsSize&&!S.selSize?'Selecciona una talla':'Agregar al carrito')+'</button>'
+  )+
+  '<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--n100)">'+
+  '<div style="font-size:12px;font-weight:800;color:var(--t1);margin-bottom:6px">Descripcion</div>'+
+  '<div style="font-size:12px;font-weight:600;color:var(--t3);line-height:1.7">'+v.desc+'</div>'+
+  '</div>'+
+  '</div>';
 }
 function selSize(s){S.selSize=s;render();}
-function addCartPDP(id){S.cart[id]=(S.cart[id]||0)+1;render();}
+function addCartPDP(id){
+  var p=V.moda.products.find(function(x){return x.id===id;});
+  if(p&&p.sizeType!=='none'&&!S.selSize) return;
+  S.cart[id]=(S.cart[id]||0)+1;
+  render();
+}
 
 // ══════════════════════════════════════════
 // SUPER
 // ══════════════════════════════════════════
 function rSuperList(){
   var v=V.super;
-  var cats='';
+  // sidebar categories
+  var cats='<div class="su-sidebar">';
   for(var i=0;i<v.cats.length;i++){
-    cats+='<div class="su-cat'+(S.superCat===i?' sel':'')+'" onclick="setSuperCat('+i+')">'+v.cats[i]+'</div>';
+    cats+='<div class="su-scat'+(S.superCat===i?' sel':'')+'" onclick="setSuperCat('+i+')">'+v.cats[i]+'</div>';
   }
+  cats+='</div>';
+  // filter by cat field
+  var filtered=v.products.filter(function(p){return p.cat===S.superCat;});
   var cards='';
-  for(var j=0;j<v.products.length;j++){
-    var p=v.products[j];
-    var added=S.cart[p.id]?'added':'';
-    var btnIcon=S.cart[p.id]?'<i class="bi bi-check-lg"></i>':'<i class="bi bi-plus-lg"></i>';
-    var oldHtml=p.old?'<span class="su-old">'+fmt(p.old)+'</span>':'';
-    cards+='<div class="su-card" onclick="openSuperPDP('+p.id+')"><div class="su-img">'+p.e+'</div><div class="su-info"><div class="su-name">'+p.name+'</div><div class="su-sub">'+(p.sub||'')+'</div><div class="su-prices">'+oldHtml+'<span class="su-price">'+fmt(p.price)+'</span></div></div><button class="su-add '+added+'" onclick="event.stopPropagation();addSuperCart('+p.id+')">'+btnIcon+'</button></div>';
+  for(var j=0;j<filtered.length;j++){
+    var p=filtered[j];
+    var qty=S.cart[p.id]||0;
+    var oldHtml=p.old?'<span class="su-old">'+fmt(p.old)+'</span> ':'';
+    var discount=p.old?'<div class="su-disc">-'+(Math.round((1-p.price/p.old)*100))+'%</div>':'';
+    var qtyCtrl=qty>0?
+      '<div class="su-qty-ctrl"><button onclick="event.stopPropagation();decSuperCart('+p.id+')">-</button><span>'+qty+'</span><button onclick="event.stopPropagation();addSuperCart('+p.id+')">+</button></div>':
+      '<button class="su-add-btn" onclick="event.stopPropagation();addSuperCart('+p.id+')"><i class="bi bi-plus-lg"></i> Agregar</button>';
+    cards+='<div class="su-card2" onclick="openSuperPDP('+p.id+')">'+discount+
+    '<div class="su-img2">'+p.e+'</div>'+
+    '<div class="su-info2">'+
+    '<div class="su-name2">'+p.name+'</div>'+
+    '<div class="su-sub2">'+(p.sub||'')+'</div>'+
+    '<div class="su-price2">'+oldHtml+'<b>'+fmt(p.price)+'</b></div>'+
+    '</div>'+
+    qtyCtrl+
+    '</div>';
   }
-  var stickyBtn=cartCount()>0?'<div class="sticky-cart-btn"><button onclick="go(\'cart\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh-xl)"><i class="bi bi-bag"></i> Ver carrito · '+fmt(cartTotal())+'</button></div>':'';
-  return storeNav()+'<div class="su-cats">'+cats+'</div><div class="su-list">'+cards+'</div>'+stickyBtn;
+  var stickyBtn=cartCount()>0?'<div class="sticky-cart-btn"><button onclick="go(\'cart\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:var(--sh-xl)"><i class="bi bi-bag"></i> Ver carrito · '+cartCount()+' productos · '+fmt(cartTotal())+'</button></div>':'';
+  return storeNav()+
+  '<div class="su-aplazo-banner">'+
+  '<div class="az-chip-sm" style="background:#4AC9E3;color:#111;font-size:10px">aplazo</div>'+
+  '<span style="font-size:12px;font-weight:700;color:var(--t1)">Paga tu despensa en plazos quincenales · Sin tarjeta de credito</span>'+
+  '</div>'+
+  '<div class="su-layout">'+cats+'<div class="su-products">'+cards+'</div></div>'+
+  stickyBtn;
 }
 function setSuperCat(i){S.superCat=i;render();}
 function addSuperCart(id){S.cart[id]=(S.cart[id]||0)+1;render();}
+function decSuperCart(id){if(S.cart[id]>1)S.cart[id]--;else delete S.cart[id];render();}
 function openSuperPDP(id){S.selProd=id;go('pdp');}
 function rSuperPDP(){
   var v=V.super;
   var p=v.products.find(function(x){return x.id===S.selProd;})||v.products[0];
-  var inCart=S.cart[p.id]||0;
+  var qty=S.cart[p.id]||0;
   var oldHtml=p.old?'<span class="su-pdp-old">'+fmt(p.old)+'</span>':'';
-  return storeNav()+backRow('product-list')+'<div class="su-pdp-img">'+p.e+'</div><div class="su-pdp-body"><div class="su-pdp-brand">'+p.brand+'</div><div class="su-pdp-name">'+p.name+'</div><div class="su-pdp-sub">'+(p.sub||'')+'</div><div class="su-pdp-prices"><span class="su-pdp-price">'+fmt(p.price)+'</span>'+oldHtml+'</div><div style="background:var(--n100);border-radius:12px;padding:12px;font-size:12px;font-weight:600;color:var(--t2);line-height:1.7;margin-bottom:16px">'+v.desc+'</div><button class="su-atc" onclick="addSuperCart('+p.id+');go(\'product-list\')">Agregar'+(inCart>0?' ('+inCart+' en carrito)':'')+'</button></div>';
+  var disc=p.old?'<span style="background:#E87722;color:#fff;font-size:11px;font-weight:800;padding:2px 8px;border-radius:100px">-'+(Math.round((1-p.price/p.old)*100))+'%</span>':'';
+  return storeNav()+backRow('product-list')+
+  '<div class="su-pdp-img">'+p.e+'</div>'+
+  '<div class="su-pdp-body">'+
+  '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">'+disc+'</div>'+
+  '<div class="su-pdp-name">'+p.name+'</div>'+
+  '<div class="su-pdp-sub">'+(p.sub||'')+'</div>'+
+  '<div class="su-pdp-prices"><span class="su-pdp-price">'+fmt(p.price)+'</span>'+oldHtml+'</div>'+
+  '<div class="m-aplazo-badge">'+
+  '<div class="az-chip-sm">aplazo</div>'+
+  '<span>3 plazos de <b>'+fmt(p.price/3)+'</b> sin comision</span>'+
+  '</div>'+
+  (qty>0?
+    '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+
+    '<div class="su-qty-ctrl-lg"><button onclick="decSuperCart('+p.id+')">-</button><span>'+qty+'</span><button onclick="addSuperCart('+p.id+')">+</button></div>'+
+    '<button class="su-atc" onclick="go(\'cart\')" style="flex:1;background:var(--green)">Ver carrito &rarr;</button>'+
+    '</div>':
+    '<button class="su-atc" onclick="addSuperCart('+p.id+');go(\'product-list\')">Agregar al carrito</button>'
+  )+
+  '<div style="background:var(--n100);border-radius:12px;padding:12px;font-size:12px;font-weight:600;color:var(--t2);line-height:1.7;margin-top:12px">'+v.desc+'</div>'+
+  '</div>';
 }
 
 // ══════════════════════════════════════════
@@ -762,10 +962,27 @@ function rCart(){
   for(var i=0;i<items.length;i++){
     var p=items[i];
     var qty=S.cart[p.id];
-    rows+='<div class="ci"><div class="ci-img">'+p.e+'</div><div class="ci-info"><div class="ci-name">'+p.name+'</div><div class="ci-price">'+fmt(p.price)+(qty>1?' x '+qty:'')+'</div></div><div class="ci-rm" onclick="removeCart('+p.id+')"><i class="bi bi-x"></i></div></div>';
+    rows+='<div class="ci">'+
+    '<div class="ci-img">'+p.e+'</div>'+
+    '<div class="ci-info">'+
+    '<div class="ci-name">'+p.name+'</div>'+
+    '<div class="ci-price">'+fmt(p.price)+' c/u</div>'+
+    '</div>'+
+    '<div style="display:flex;align-items:center;gap:8px">'+
+    '<div style="display:flex;align-items:center;gap:8px;background:var(--n100);border-radius:100px;padding:4px 8px">'+
+    '<div style="width:24px;height:24px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;font-weight:700;color:var(--t1);box-shadow:var(--sh-sm)" onclick="cartDec('+p.id+')">-</div>'+
+    '<div style="font-size:14px;font-weight:800;color:var(--t1);min-width:20px;text-align:center">'+qty+'</div>'+
+    '<div style="width:24px;height:24px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;font-weight:700;color:var(--t1);box-shadow:var(--sh-sm)" onclick="cartInc('+p.id+')">+</div>'+
+    '</div>'+
+    '<div style="font-size:14px;font-weight:800;color:var(--t1);min-width:64px;text-align:right">'+fmt(p.price*qty)+'</div>'+
+    '</div>'+
+    '<div class="ci-rm" onclick="removeCart('+p.id+')"><i class="bi bi-x"></i></div>'+
+    '</div>';
   }
   return storeNav(true)+'<div class="cart-pg"><div class="cart-back-row"><div class="cart-back" onclick="go(\'product-list\')"><i class="bi bi-arrow-left"></i></div><div class="cart-ttl">Tu carrito</div></div>'+rows+'<div class="cart-sum"><div class="cs-row"><span>Subtotal</span><span>'+fmt(total)+'</span></div><div class="cs-row"><span>Envio</span><span style="color:var(--green);font-weight:700">Gratis</span></div><div class="cs-row total"><span>Total</span><span>'+fmt(total)+'</span></div></div><button class="cart-cta" onclick="go(\'merch-checkout\')">Proceder al pago &rarr;</button></div>';
 }
+function cartInc(id){S.cart[id]=(S.cart[id]||0)+1;render();}
+function cartDec(id){if(S.cart[id]>1)S.cart[id]--;else delete S.cart[id];if(!cartCount())go('product-list');else render();}
 function removeCart(id){delete S.cart[id];if(!cartCount())go('product-list');else render();}
 
 // ══════════════════════════════════════════
@@ -791,7 +1008,6 @@ function rMerchCk(){
 // ══════════════════════════════════════════
 // ENTRET
 // ══════════════════════════════════════════
-var EN_DATES=['Hoy 23 Abr','Manana 24 Abr','Sab 25 Abr','Dom 26 Abr','Lun 27 Abr','Mar 28 Abr'];
 function rEnMovies(){
   var v=V.entret;
   var dates='';
@@ -799,22 +1015,82 @@ function rEnMovies(){
   var movies='';
   for(var j=0;j<v.movies.length;j++){
     var m=v.movies[j];
-    movies+='<div class="en-movie" onclick="selMovie('+m.id+')"><div class="en-poster" style="background:'+m.bg+'"><div class="en-rating" style="background:'+m.rc+'">'+m.rating+'</div><span style="font-size:48px">'+m.e+'</span></div><div class="en-movie-info"><div class="en-movie-ttl">'+m.ttl+'</div><div class="en-movie-meta">'+m.genre+'</div></div></div>';
+    movies+='<div class="en-movie" onclick="selMovie('+m.id+')">'+
+    '<div class="en-poster" style="background:'+m.bg+'">'+
+    '<div class="en-rating-badge" style="background:'+m.rc+'">'+m.rating+'</div>'+
+    '<span style="font-size:52px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))">'+m.e+'</span>'+
+    '<div class="en-poster-overlay"><div class="en-poster-ttl">'+m.ttl+'</div></div>'+
+    '</div>'+
+    '<div class="en-movie-info">'+
+    '<div class="en-movie-ttl">'+m.ttl+'</div>'+
+    '<div class="en-movie-meta">'+
+    '<span class="en-meta-badge" style="background:'+m.rc+';color:#fff">'+m.rating+'</span>'+
+    '<span style="font-size:11px;font-weight:600;color:var(--t3)">'+m.genre+'</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+
+    ['4:00 PM','6:30 PM','9:00 PM'].map(function(t){return '<div style="background:var(--va-l);border:1px solid var(--va-acc);border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;color:var(--va-acc)">'+t+'</div>';}).join('')+
+    '</div>'+
+    '</div></div>';
   }
-  return '<nav class="en-nav"><div class="en-nav-logo">CineMax</div><div class="en-nav-links"><div class="en-nav-lnk sel">Peliculas</div><div class="en-nav-lnk">Alimentos</div><div class="en-nav-lnk">Club</div></div></nav><div class="en-tabs"><div class="en-tab sel">Cartelera</div><div class="en-tab">Horarios</div></div><div class="en-dates">'+dates+'</div><div class="en-movies">'+movies+'</div>';
+  return '<nav class="en-nav">'+
+  '<div class="en-nav-logo">CineMax</div>'+
+  '<div class="en-nav-links">'+
+  '<div class="en-nav-lnk sel">Peliculas</div>'+
+  '<div class="en-nav-lnk">Alimentos</div>'+
+  '<div class="en-nav-lnk">Club CineMax</div>'+
+  '</div>'+
+  '<div class="en-nav-cart" onclick=""><i class="bi bi-ticket-perforated"></i></div>'+
+  '</nav>'+
+  '<div class="en-tabs"><div class="en-tab sel">En cartelera</div><div class="en-tab">Proximos estrenos</div><div class="en-tab">IMAX</div></div>'+
+  '<div class="en-dates">'+dates+'</div>'+
+  '<div class="en-movies">'+movies+'</div>';
 }
 function setEnDate(i){S.enDateIdx=i;render();}
 function selMovie(id){S.selMovie=id;S.selTime=null;S.selSeats=[];go('en-showtime');}
 function rEnShowtime(){
   var v=V.entret;
   var m=v.movies.find(function(x){return x.id===S.selMovie;})||v.movies[0];
+  var formats=['Tradicional 2D','Tradicional 3D (+$15)','D-BOX (+$60)','IMAX (+$80)'];
   var times='';
+  var fmtPrices=[0,15,60,80];
   for(var i=0;i<v.showtimes.length;i++){
     var t=v.showtimes[i];
     times+='<div class="en-time'+(S.selTime===t?' sel':'')+'" onclick="selTime(\''+t+'\')">'+t+'</div>';
   }
-  var contBtn=S.selTime?'<div style="padding:0 16px 16px"><button onclick="go(\'en-seats\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Seleccionar asientos</button></div>':'';
-  return '<nav class="en-nav"><div style="cursor:pointer;color:rgba(255,255,255,.7)" onclick="go(\'en-movies\')"><i class="bi bi-arrow-left"></i></div><div class="en-nav-logo">CineMax</div><div></div></nav><div class="en-banner" style="background:'+m.bg+'"><div style="font-size:54px;flex-shrink:0">'+m.e+'</div><div><div style="font-size:16px;font-weight:800;color:#fff;line-height:1.3">'+m.ttl+'</div><div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="background:'+m.rc+';color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px">'+m.rating+'</span><span style="font-size:11px;color:rgba(255,255,255,.7);font-weight:600">'+m.genre+'</span></div></div></div><div class="en-steps"><div class="en-st cur">Horario</div><div class="en-st">Asientos</div><div class="en-st">Alimentos</div><div class="en-st">Pago</div></div><div class="en-showtimes"><div class="en-st-day">Galerias Acapulco &nbsp;·&nbsp; '+EN_DATES[S.enDateIdx]+'</div><div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:8px">Espanol</div><div class="en-times">'+times+'</div></div>'+contBtn;
+  var steps=enSteps(1);
+  var contBtn=S.selTime?
+    '<div style="padding:0 16px 20px"><button onclick="go(\'en-seats\')" style="width:100%;padding:14px;border-radius:100px;border:none;background:var(--va-btn);color:var(--va-btn-t);font-size:15px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Seleccionar asientos &rarr;</button></div>':'';
+  return '<nav class="en-nav">'+
+  '<div style="cursor:pointer;color:rgba(255,255,255,.8)" onclick="go(\'en-movies\')"><i class="bi bi-arrow-left"></i></div>'+
+  '<div class="en-nav-logo">CineMax</div><div></div></nav>'+
+  steps+
+  '<div class="en-banner" style="background:'+m.bg+'">'+
+  '<div style="font-size:54px;filter:drop-shadow(0 4px 16px rgba(0,0,0,.5));flex-shrink:0">'+m.e+'</div>'+
+  '<div>'+
+  '<div style="font-size:16px;font-weight:800;color:#fff;line-height:1.3">'+m.ttl+'</div>'+
+  '<div style="display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap">'+
+  '<span style="background:'+m.rc+';color:#fff;font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px">'+m.rating+'</span>'+
+  '<span style="font-size:11px;color:rgba(255,255,255,.7);font-weight:600">'+m.genre+'</span>'+
+  '</div>'+
+  '<div style="font-size:12px;color:rgba(255,255,255,.6);font-weight:600;margin-top:4px">'+fmt(m.price)+' / boleto</div>'+
+  '</div></div>'+
+  '<div style="padding:14px 16px"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:10px">Formato</div>'+
+  '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px">'+
+  formats.map(function(f,i){return '<div style="border:1.5px solid '+(i===0?'var(--va-acc)':'var(--border)')+';border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:'+(i===0?'var(--va-acc)':'var(--t3)')+';cursor:pointer;background:'+(i===0?'var(--va-l)':'#fff')+'">'+f+'</div>';}).join('')+
+  '</div>'+
+  '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-bottom:8px">Sucursal — Galerias Acapulco</div>'+
+  '<div class="en-times">'+times+'</div>'+
+  '</div>'+
+  contBtn;
+}
+function enSteps(cur){
+  var steps=['Horario','Asientos','Alimentos','Pago'];
+  var html='<div class="en-steps-bar">';
+  steps.forEach(function(s,i){
+    html+='<div class="en-step'+(i<cur?' done':i===cur?' cur':'')+'">'+(i<cur?'<i class="bi bi-check-lg"></i>':i+1)+' '+s+'</div>';
+    if(i<steps.length-1) html+='<div class="en-step-line'+(i<cur?' done':'')+'"></div>';
+  });
+  return html+'</div>';
 }
 function selTime(t){S.selTime=t;render();}
 var TAKEN_SEATS={A7:1,B3:1,B9:1,C1:1,D5:1,E11:1,F7:1,G2:1,G8:1,H4:1,I6:1};
@@ -881,20 +1157,69 @@ function rEnCk(){
 // VIAJES
 // ══════════════════════════════════════════
 function rVjSearch(){
-  return '<div><div class="vj-hdr"><div class="vj-logo-bar"><div class="vj-logo">ViajaBus</div></div><div style="padding:0 14px 14px"><div class="vj-search"><div class="vj-sr"><div class="vj-city"><div class="vj-city-lbl">Origen</div><div class="vj-city-val">Ciudad de Mexico</div></div><div class="vj-sw"><i class="bi bi-arrow-left-right"></i></div><div class="vj-city"><div class="vj-city-lbl">Destino</div><div class="vj-city-val">Queretaro</div></div></div><div class="vj-info-row"><div class="vj-if"><div class="vj-if-lbl">Ida</div><div class="vj-if-val">24-Abr-26</div></div><div class="vj-if"><div class="vj-if-lbl">Regreso</div><div class="vj-if-val" style="color:var(--t3)">Opcional</div></div><div class="vj-if"><div class="vj-if-lbl">Viajeros</div><div class="vj-if-val">1 pasajero</div></div></div><button class="vj-bus-btn" onclick="go(\'vj-schedules\')"><i class="bi bi-search"></i> Buscar</button></div></div></div><div style="padding:28px;text-align:center;color:var(--t3)"><div style="font-size:40px;margin-bottom:12px">🚌</div><div style="font-size:14px;font-weight:700;color:var(--t2)">Busca tu viaje</div><div style="font-size:12px;font-weight:600;margin-top:4px">Elige origen, destino y fecha para ver los horarios.</div></div></div>';
+  var DESTS=['Queretaro','Guadalajara','Monterrey','Puebla','Veracruz','Acapulco','Leon','Morelia'];
+  return '<div class="vj-hdr-wrap">'+
+  '<div class="vj-logo-bar"><div class="vj-logo">ViajaBus</div><div style="font-size:10px;font-weight:600;color:rgba(255,255,255,.6);margin-top:2px">Compra tus boletos en linea</div></div>'+
+  '<div class="vj-search-box">'+
+  '<div class="vj-tabs-sm"><div class="vj-tab-sm sel">Solo ida</div><div class="vj-tab-sm">Ida y vuelta</div></div>'+
+  '<div class="vj-sr">'+
+  '<div class="vj-city"><div class="vj-city-lbl">ORIGEN</div><div class="vj-city-val">Ciudad de Mexico (TAPO)</div></div>'+
+  '<div class="vj-sw" onclick="swapVj()"><i class="bi bi-arrow-left-right"></i></div>'+
+  '<div class="vj-city"><div class="vj-city-lbl">DESTINO</div><div class="vj-city-val" style="color:var(--va-acc)">'+S.vjTo+', Mex</div></div>'+
+  '</div>'+
+  '<div class="vj-info-row">'+
+  '<div class="vj-if"><div class="vj-if-lbl"><i class="bi bi-calendar3"></i> Fecha</div><div class="vj-if-val">28-Abr-26</div></div>'+
+  '<div class="vj-if"><div class="vj-if-lbl"><i class="bi bi-person"></i> Pasajeros</div><div class="vj-if-val">1 Adulto</div></div>'+
+  '</div>'+
+  '<button class="vj-bus-btn" onclick="go(\'vj-schedules\')"><i class="bi bi-search"></i> Buscar salidas</button>'+
+  '</div>'+
+  '</div>'+
+  '<div style="background:#fff;padding:16px 14px">'+
+  '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin-bottom:10px">Elige tu destino desde CDMX</div>'+
+  '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+
+  DESTS.map(function(d){
+    var sel=S.vjTo===d;
+    return '<div onclick="S.vjTo=\''+d+'\';render()" style="background:'+(sel?'var(--va-btn)':'var(--n100)')+';border-radius:100px;padding:6px 12px;font-size:11px;font-weight:700;color:'+(sel?'var(--va-btn-t)':'var(--t2)')+';cursor:pointer;transition:all .15s">'+d+'</div>';
+  }).join('')+
+  '</div>'+
+  '<div style="font-size:11px;font-weight:600;color:var(--t3)">Destino seleccionado: <b style="color:var(--t1)">'+S.vjTo+'</b> — presiona Buscar salidas</div>'+
+  '</div>';
 }
+function swapVj(){var tmp=S.vjFrom;S.vjFrom=S.vjTo;S.vjTo=tmp;render();}
 function rVjSchedules(){
   var v=V.viajes;
+  var routes=v.routes;
   var trips='';
-  for(var i=0;i<v.routes.length;i++){
-    var r=v.routes[i];
+  for(var i=0;i<routes.length;i++){
+    var r=routes[i];
     var isSel=S.selRoute===r.id;
     var tag=r.tag?'<div class="vj-trip-tag">'+r.tag+'</div>':'';
-    trips+='<div class="vj-trip'+(isSel?' sel':'')+'" onclick="selRoute('+r.id+')">'+tag+'<div class="vj-times"><div class="vj-time">'+r.dep+'</div><div class="vj-arrow">— Directo &rarr;</div><div class="vj-time">'+r.arr+'</div></div><div class="vj-tm"><div><div class="vj-dur">'+r.dur+'</div><div class="vj-seats-lbl">'+r.seats+' asientos disponibles</div></div><div style="text-align:right"><div class="vj-trip-price">'+fmt(r.price)+' MXN</div><div style="font-size:11px;font-weight:700;color:var(--va-acc);text-decoration:underline;cursor:pointer;margin-top:2px">Ver asientos</div></div></div></div>';
+    var selBtn=isSel?
+      '<button onclick="go(\'vj-seats\')" style="padding:8px 16px;border:none;border-radius:100px;background:var(--va-btn);color:var(--va-btn-t);font-size:12px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Elegir asiento</button>':
+      '<button onclick="selRoute('+r.id+')" style="padding:8px 16px;border:1.5px solid var(--va-acc);border-radius:100px;background:#fff;color:var(--va-acc);font-size:12px;font-weight:800;cursor:pointer;font-family:Plus Jakarta Sans,sans-serif">Seleccionar</button>';
+    trips+='<div class="vj-trip'+(isSel?' sel':'')+'">'+tag+
+    '<div class="vj-times"><div class="vj-time">'+r.dep+'</div><div class="vj-arrow"><i class="bi bi-arrow-right"></i> Directo</div><div class="vj-time">'+r.arr+'</div></div>'+
+    '<div class="vj-tm"><div><div class="vj-dur"><i class="bi bi-clock"></i> '+r.dur+'</div><div class="vj-seats-lbl">'+r.seats+' asientos disponibles</div></div>'+
+    '<div style="text-align:right"><div class="vj-trip-price">'+fmt(r.price)+'</div><div style="font-size:10px;font-weight:600;color:var(--t3);margin-bottom:6px">por persona</div>'+selBtn+'</div></div></div>';
   }
-  return '<div><div style="background:var(--va);padding-bottom:12px"><div style="display:flex;align-items:center;padding:10px 16px;gap:8px"><div style="cursor:pointer;color:rgba(255,255,255,.7);font-size:18px" onclick="go(\'vj-search\')"><i class="bi bi-arrow-left"></i></div><div style="font-size:14px;font-weight:800;color:#fff">CDMX &rarr; Queretaro</div></div></div><div style="padding:14px 14px 24px"><div style="font-size:14px;font-weight:800;color:var(--t1);margin-bottom:12px">Horarios disponibles &nbsp;·&nbsp; 24 Abr</div>'+trips+'</div></div>';
+  return '<div>'+
+  '<div style="background:var(--va);padding-bottom:10px">'+
+  '<div style="display:flex;align-items:center;padding:10px 16px;gap:8px">'+
+  '<div style="cursor:pointer;color:rgba(255,255,255,.7);font-size:18px" onclick="go(\'vj-search\')"><i class="bi bi-arrow-left"></i></div>'+
+  '<div style="font-size:14px;font-weight:800;color:#fff">CDMX &#8594; '+S.vjTo+'</div>'+
+  '</div>'+
+  '<div style="display:flex;gap:8px;padding:0 16px">'+
+  '<div style="background:rgba(255,255,255,.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">28 Abr 2026</div>'+
+  '<div style="background:rgba(255,255,255,.15);border-radius:8px;padding:5px 12px;font-size:11px;font-weight:700;color:#fff">1 Adulto</div>'+
+  '</div></div>'+
+  '<div style="padding:14px 14px 24px">'+
+  '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">'+
+  '<div style="font-size:14px;font-weight:800;color:var(--t1)">'+routes.length+' salidas disponibles</div>'+
+  '</div>'+
+  trips+'</div></div>';
 }
-function selRoute(id){S.selRoute=id;S.selSeat=null;go('vj-seats');}
+function selRoute(id){S.selRoute=id;render();}
+
 var TAKEN_BUS={3:1,7:1,10:1,15:1,20:1,25:1,28:1,32:1,5:1,18:1};
 function rVjSeats(){
   var v=V.viajes;
