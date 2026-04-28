@@ -7,135 +7,134 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Plus Jakarta Sans',sans-serif}
-body{background:linear-gradient(160deg,#0a2b2d 0%,#214345 50%,#0a2b2d 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;position:relative;overflow:hidden}
+html,body{height:100%;overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif}
+body{display:flex;background:#0a2b2d}
 
-/* background blur circles */
-body::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(74,201,227,.12) 0%,transparent 70%);top:-100px;left:-150px;pointer-events:none}
-body::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(74,201,227,.08) 0%,transparent 70%);bottom:-80px;right:-100px;pointer-events:none}
+/* ══ SIDEBAR ══ */
+.sidebar{width:220px;flex-shrink:0;background:linear-gradient(180deg,#0d3336 0%,#0a2b2d 100%);display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.07);height:100vh;overflow:hidden}
+.sb-logo{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-logo-chip{background:#4AC9E3;border-radius:100px;padding:5px 13px;display:inline-flex;align-items:center;margin-bottom:5px}
+.sb-logo-chip span{font-family:'Manrope',sans-serif;font-weight:800;font-size:13px;color:#214345}
+.sb-logo-sub{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.5px;text-transform:uppercase}
+.sb-section-lbl{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.25);padding:16px 18px 6px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 14px;margin:2px 8px;border-radius:10px;cursor:pointer;transition:all .15s;border:1.5px solid transparent;user-select:none}
+.sb-item:hover{background:rgba(255,255,255,.07)}
+.sb-item.active{background:rgba(74,201,227,.12);border-color:rgba(74,201,227,.25)}
+.sb-item-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(255,255,255,.06)}
+.sb-item.active .sb-item-icon{background:rgba(74,201,227,.2)}
+.sb-item-name{font-size:12px;font-weight:800;color:rgba(255,255,255,.75);line-height:1.2}
+.sb-item.active .sb-item-name{color:#fff}
+.sb-item-sub{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);margin-top:1px}
+.sb-item.active .sb-item-sub{color:rgba(74,201,227,.7)}
+.sb-divider{height:1px;background:rgba(255,255,255,.06);margin:10px 14px}
+.sb-bottom{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.06)}
+.sb-bottom-txt{font-size:10px;font-weight:600;color:rgba(255,255,255,.2);line-height:1.7}
+.sb-bottom-txt strong{color:rgba(255,255,255,.35)}
 
-/* logo */
-.logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:48px}
-.logo-chip{background:#4AC9E3;border-radius:100px;padding:8px 20px;display:inline-flex;align-items:center}
-.logo-chip span{font-family:'Manrope',sans-serif;font-weight:800;font-size:20px;color:#214345}
-.logo-label{font-size:14px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.5px}
+/* ══ CONTENT AREA ══ */
+.content{flex:1;position:relative;overflow:hidden}
 
-/* headline */
-.headline{text-align:center;margin-bottom:52px}
-.headline h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:12px;letter-spacing:-.5px}
-.headline h1 span{color:#4AC9E3}
-.headline p{font-size:16px;font-weight:600;color:rgba(255,255,255,.55);max-width:460px;line-height:1.6}
+/* ══ WELCOME ══ */
+.welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;background:linear-gradient(160deg,#0a2b2d 0%,#214345 50%,#0a2b2d 100%);overflow:hidden}
+.welcome::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(74,201,227,.1) 0%,transparent 70%);top:-100px;right:-100px;pointer-events:none}
+.welcome::after{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(74,201,227,.07) 0%,transparent 70%);bottom:-80px;left:-80px;pointer-events:none}
+.welcome-inner{position:relative;z-index:1}
+.welcome h1{font-size:clamp(24px,3vw,36px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:12px}
+.welcome h1 span{color:#4AC9E3}
+.welcome p{font-size:14px;font-weight:600;color:rgba(255,255,255,.5);max-width:380px;line-height:1.7;margin-bottom:36px}
+.welcome-cards{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.wc{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:16px;padding:20px;cursor:pointer;transition:all .2s;text-align:left;width:200px}
+.wc:hover{border-color:rgba(74,201,227,.4);background:rgba(255,255,255,.09);transform:translateY(-2px)}
+.wc-icon{font-size:24px;margin-bottom:10px;display:block}
+.wc-name{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.wc-sub{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);line-height:1.5}
+.welcome.hidden{display:none}
 
-/* cards */
-.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:700px;margin-bottom:36px}
-@media(max-width:600px){.cards{grid-template-columns:1fr}}
-.card{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:24px;padding:32px 28px;cursor:pointer;transition:all .2s;text-decoration:none;display:flex;flex-direction:column;gap:0;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,201,227,.08) 0%,transparent 60%);opacity:0;transition:opacity .2s}
-.card:hover{border-color:rgba(74,201,227,.5);background:rgba(255,255,255,.09);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
-.card:hover::before{opacity:1}
-.card-icon{width:56px;height:56px;border-radius:16px;background:rgba(74,201,227,.15);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;border:1.5px solid rgba(74,201,227,.2)}
-.card-badge{position:absolute;top:20px;right:20px;background:rgba(74,201,227,.15);border:1px solid rgba(74,201,227,.3);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:800;color:#4AC9E3;letter-spacing:.5px;text-transform:uppercase}
-.card h2{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px;line-height:1.2}
-.card p{font-size:13px;font-weight:600;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:24px;flex:1}
-.card-flow{display:flex;flex-direction:column;gap:6px;margin-bottom:24px}
-.flow-step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,.55)}
-.flow-dot{width:5px;height:5px;border-radius:50%;background:#4AC9E3;flex-shrink:0}
-.card-cta{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.08);border-radius:12px;border:1px solid rgba(255,255,255,.1);transition:all .2s}
-.card:hover .card-cta{background:rgba(74,201,227,.15);border-color:rgba(74,201,227,.3)}
-.card-cta span{font-size:13px;font-weight:800;color:#fff}
-.card-cta-arrow{width:28px;height:28px;border-radius:50%;background:rgba(74,201,227,.2);display:flex;align-items:center;justify-content:center;color:#4AC9E3;font-size:14px;transition:all .2s}
-.card:hover .card-cta-arrow{background:#4AC9E3;color:#214345;transform:translateX(2px)}
-
-/* divider */
-.divider{display:flex;align-items:center;gap:12px;width:100%;max-width:700px;margin-bottom:24px}
-.divider-line{flex:1;height:1px;background:rgba(255,255,255,.1)}
-.divider-text{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
-
-/* footer */
-.footer{text-align:center}
-.footer p{font-size:12px;font-weight:600;color:rgba(255,255,255,.25);line-height:1.8}
-.footer strong{color:rgba(255,255,255,.4)}
+/* ══ IFRAME ══ */
+#sim-frame{position:absolute;inset:0;width:100%;height:100%;border:none;display:none}
+#sim-frame.show{display:block}
 </style>
 </head>
 <body>
 
-<div class="logo-wrap">
-  <div class="logo-chip"><span>aplazo</span></div>
-  <div class="logo-label">Sales Simulator</div>
-</div>
-
-<div class="headline">
-  <h1>Simula el proceso de compra<br>con <span>Aplazo</span></h1>
-  <p>Demostraciones interactivas de punta a punta para el equipo de ventas. Elige el canal que quieres mostrar.</p>
-</div>
-
-<div class="cards">
-
-  <!-- ONLINE -->
-  <a class="card" href="online.html">
-    <div class="card-badge">Desktop · Móvil</div>
-    <div class="card-icon">🛍️</div>
-    <h2>Venta Online</h2>
-    <p>Simula el flujo de compra en un ecommerce: catálogo, carrito, checkout del comercio y checkout de Aplazo.</p>
-    <div class="card-flow">
-      <div class="flow-step"><div class="flow-dot"></div>Catálogo de productos</div>
-      <div class="flow-step"><div class="flow-dot"></div>Carrito + checkout del comercio</div>
-      <div class="flow-step"><div class="flow-dot"></div>Login Aplazo + OTP (desktop)</div>
-      <div class="flow-step"><div class="flow-dot"></div>Checkout E2 + confirmación</div>
-    </div>
-    <div class="card-cta">
-      <span>Abrir simulador online</span>
-      <div class="card-cta-arrow">→</div>
-    </div>
-  </a>
-
-  <!-- OFFLINE -->
-  <a class="card" href="offline.html">
-    <div class="card-badge">POS · Presencial</div>
-    <div class="card-icon">🏪</div>
-    <h2>Venta Offline</h2>
-    <p>Simula el flujo en punto de venta: el cajero procesa la orden, envía el link al cliente y espera confirmación.</p>
-    <div class="card-flow">
-      <div class="flow-step"><div class="flow-dot"></div>POS con catálogo y orden</div>
-      <div class="flow-step"><div class="flow-dot"></div>WhatsApp · SMS · Código QR</div>
-      <div class="flow-step"><div class="flow-dot"></div>Checkout en teléfono del cliente</div>
-      <div class="flow-step"><div class="flow-dot"></div>Confirmación en ambas pantallas</div>
-    </div>
-    <div class="card-cta">
-      <span>Abrir simulador offline</span>
-      <div class="card-cta-arrow">→</div>
-    </div>
-  </a>
-
-</div>
-
-<div class="divider">
-  <div class="divider-line"></div>
-  <div class="divider-text">Verticales disponibles</div>
-  <div class="divider-line"></div>
-</div>
-
-<div style="display:flex;gap:10px;margin-bottom:40px;flex-wrap:wrap;justify-content:center">
-  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
-    <span style="font-size:16px">👟</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Moda</span>
+<div class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-chip"><span>aplazo</span></div>
+    <div class="sb-logo-sub">Sales Simulator</div>
   </div>
-  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
-    <span style="font-size:16px">🛒</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Supermercado</span>
+
+  <div class="sb-section-lbl">Simuladores</div>
+
+  <div class="sb-item" id="nav-online" onclick="loadSim('online.html','nav-online')">
+    <div class="sb-item-icon">🛍️</div>
+    <div>
+      <div class="sb-item-name">Online</div>
+      <div class="sb-item-sub">Ecommerce · Web</div>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
-    <span style="font-size:16px">🎬</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Entretenimiento</span>
+
+  <div class="sb-item" id="nav-offline" onclick="loadSim('offline.html','nav-offline')">
+    <div class="sb-item-icon">🏪</div>
+    <div>
+      <div class="sb-item-name">Offline</div>
+      <div class="sb-item-sub">POS · Presencial</div>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:7px 14px">
-    <span style="font-size:16px">🚌</span><span style="font-size:12px;font-weight:700;color:rgba(255,255,255,.65)">Viajes</span>
+
+  <div class="sb-divider"></div>
+  <div class="sb-section-lbl">Verticales</div>
+
+  <div style="padding:4px 10px 10px">
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">👟 Moda</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🛒 Super</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🎬 Cine</div>
+      <div style="background:rgba(255,255,255,.06);border-radius:100px;padding:4px 10px;font-size:10px;font-weight:700;color:rgba(255,255,255,.5)">🚌 Viajes</div>
+    </div>
+  </div>
+
+  <div class="sb-bottom">
+    <div class="sb-bottom-txt">
+      <strong>Uso interno</strong><br>
+      Equipo de Ventas Aplazo<br>
+      No conectado a producción
+    </div>
   </div>
 </div>
 
-<div class="footer">
-  <p>
-    <strong>Uso interno · Equipo de Ventas Aplazo</strong><br>
-    Simulador de demos — no conectado a producción ni a datos reales
-  </p>
+<div class="content">
+  <div class="welcome" id="welcome">
+    <div class="welcome-inner">
+      <h1>Bienvenido al<br><span>Sales Simulator</span></h1>
+      <p>Elige un simulador de la barra lateral o selecciona una opción para comenzar.</p>
+      <div class="welcome-cards">
+        <div class="wc" onclick="loadSim('online.html','nav-online')">
+          <span class="wc-icon">🛍️</span>
+          <div class="wc-name">Online</div>
+          <div class="wc-sub">Ecommerce con checkout Aplazo. Desktop y móvil.</div>
+        </div>
+        <div class="wc" onclick="loadSim('offline.html','nav-offline')">
+          <span class="wc-icon">🏪</span>
+          <div class="wc-name">Offline</div>
+          <div class="wc-sub">POS presencial con pantalla dividida cajero + cliente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <iframe id="sim-frame" title="Simulador Aplazo"></iframe>
 </div>
 
+<script>
+function loadSim(url, navId){
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.remove('active');});
+  var nav=document.getElementById(navId);
+  if(nav) nav.classList.add('active');
+  document.getElementById('welcome').classList.add('hidden');
+  var frame=document.getElementById('sim-frame');
+  frame.src=url;
+  frame.classList.add('show');
+}
+</script>
 </body>
 </html>
